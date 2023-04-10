@@ -1,0 +1,241 @@
+App\Entity\Membre:
+  properties:
+    pseudo:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 3
+          max: 20
+          minMessage: "field: pseudo must be at least {{ limit }} characters long"
+          maxMessage: "field: pseudo  cannot be longer than {{ limit }} characters"
+
+    password:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 8
+          max: 60
+          minMessage: "field: mdp must be at least {{ limit }} characters long"
+          maxMessage: "field: mdp  cannot be longer than {{ limit }} characters"
+
+    nom:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 2
+          max: 20
+          minMessage: "field: nom must be at least {{ limit }} characters long"
+          maxMessage: "field: nom  cannot be longer than {{ limit }} characters"
+
+    prenom:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 2
+          max: 20
+          minMessage: "field: prenom must be at least {{ limit }} characters long"
+          maxMessage: "field: prenom  cannot be longer than {{ limit }} characters"
+
+    email:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 3
+          max: 50
+          minMessage: "field: email must be at least {{ limit }} characters long"
+          maxMessage: "field: email  cannot be longer than {{ limit }} characters"
+
+    civilite:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 1
+          max: 1
+          minMessage: "field: civilite must be at least  {{ limit }} characters long"
+          maxMessage: "field: civilite must be at most {{ limit }} characters long"
+
+    ville:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 2
+          max: 20
+          minMessage: "field: ville must be at least {{ limit }} characters long"
+          maxMessage: "field: ville  cannot be longer than {{ limit }} characters"
+
+    code_postal:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 5
+          max: 11
+          minMessage: "field: code_postal must be at least {{ limit }} characters long"
+          maxMessage: "field: code_postal  cannot be longer than {{ limit }} characters"
+
+    adresse:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 3
+          max: 50
+          minMessage: "field: adresse must be at least {{ limit }} characters long"
+          maxMessage: "field: adresse  cannot be longer than {{ limit }} characters"
+
+App\Entity\Produit:
+  properties:
+    reference:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 2
+          max: 20
+          minMessage: "field: reference must be at least {{ limit }} characters long"
+          maxMessage: "field: reference  cannot be longer than {{ limit }} characters"
+
+    titre:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 2
+          max: 100
+          minMessage: "field: titre must be at least {{ limit }} characters long"
+          maxMessage: "field: titre  cannot be longer than {{ limit }} characters"
+
+    description:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 2
+          minMessage: "field: description must be at least {{ limit }} characters long"
+
+    couleur:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 2
+          max: 20
+          minMessage: "field: couleur must be at least {{ limit }} characters long"
+          maxMessage: "field: couleur  cannot be longer than {{ limit }} characters"
+
+    taille:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 1
+          max: 5
+          minMessage: "field: taille must be at least {{ limit }} characters long"
+          maxMessage: "field: taille  cannot be longer than {{ limit }} characters"
+
+    sexe:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 1
+          max: 1
+          minMessage: "field: sexe must be at least  {{ limit }} characters long"
+          maxMessage: "field: sexe must be at most {{ limit }} characters long"
+
+    photo:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 1
+          max: 255
+          minMessage: "field: photo must be at least  {{ limit }} characters long"
+          maxMessage: "field: photo must be at most {{ limit }} characters long"
+
+    prix:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: float
+          message: The value {{ value }} is not a valid {{ type }}.
+
+    stock:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: integer
+          message: The value {{ value }} is not a valid {{ type }}.
+
+App\Entity\Categorie:
+  properties:
+    nom:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 1
+          max: 30
+          minMessage: "field: nom must be at least {{ limit }} characters long"
+          maxMessage: "field: nom  cannot be longer than {{ limit }} characters"
+
+App\Entity\Coupon:
+  properties:
+    code_activation:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 1
+          max: 255
+          minMessage: "field: code_activation must be at least {{ limit }} characters long"
+          maxMessage: "field: code_activation  cannot be longer than {{ limit }} characters"
+    reduction:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: integer
+          message: The value {{ value }} is not a valid {{ type }}.

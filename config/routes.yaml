@@ -1,0 +1,105 @@
+controllers:
+  resource: ../src/Controller/
+  type: attribute
+
+#---------- Configuration des routes de l'app ------------
+#
+# --------------------------------------------------------
+#           Route classique
+# --------------------------------------------------------
+# [nom_de_la_route]
+# app_article:
+#     [route]
+#     path:  /blog/{catId}/{articleId}
+#
+#     [namespace\nomController::nomMethodeConcernée]
+#     controller: App\Controller\ArticleController::index
+#
+#     [methodes HTTP authorisées]
+#     methods: GET|HEAD
+#
+#     [les valeurs par défaut des paramètre d'url]
+#     defaults:
+#         pageId: 1
+#         articleId: null
+#
+#     [obligations sur les paramètres d'url]
+#     requirements:
+#         pageId: \d+
+#         articleId: \d+
+#
+#     [conditions d'activation de la route]
+#     syntaxe pour les conditions: https://symfony.com/doc/2.8/components/expression_language/syntax.html
+#     condition: "request.headers.get('User-Agent') matches '/firefox/i'"
+#
+#
+#
+# --------------------------------------------------------
+#           Route vers un sous-domaine
+# --------------------------------------------------------
+# [nom_de_la_route]
+# mobile_article:
+#     [route]
+#     path:  /blog/{catId}/{articleId}
+#
+#     [Hôte]
+#     host: "{sousDomaine}.nom-de-domaine.com"
+#
+#     [namespace\nomController::nomMethodeConcernée]
+#     controller: App\Controller\ArticleController::mobileArticle
+#
+#     [methodes HTTP authorisées]
+#     methods: GET|HEAD
+#
+#     [les valeur par défaut des paramètre d'url]
+#     defaults:
+#         pageId: 1
+#         articleId: null
+#         sousDomaine: m
+#
+#     [obligations sur les paramètres d'url]
+#     requirements:
+#         pageId: \d+
+#         articleId: \d+
+#         sousDomaine: m|mobile
+#
+#     [conditions d'activation de la route]
+#     syntaxe pour les conditions: https://symfony.com/doc/2.8/components/expression_language/syntax.html
+#     condition: "request.headers.get('User-Agent') matches '/firefox/i'"
+
+app_home:
+  path: /
+  controller: App\Controller\HomeController::index
+
+app_admin:
+  path: /admin
+  controller: App\Controller\AdminController::dashboard
+
+app_admin_member_management:
+  path: /admin/members
+  controller: App\Controller\AdminController::memberManagement
+
+app_member:
+  path: member/profile
+  controller: App\Controller\MemberController::dashboard
+
+app_login:
+  path: /login
+  controller: App\Controller\SecurityController::login
+  methods: [GET, POST]
+
+app_logout:
+  path: /logout
+  methods: GET
+
+app_register:
+  path: /register
+  controller: App\Controller\RegistrationController::register
+
+app_verify_email:
+  path: /verify/email
+  controller: App\Controller\RegistrationController::verifyUserEmail
+
+app_email_conf_sent:
+  path: /signup/confirmation
+  controller: App\Controller\RegistrationController::postSignUp

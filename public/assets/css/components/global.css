@@ -1,0 +1,54 @@
+/*variables couleurs racines */
+:root {
+    --texte-principal: #000;
+    --texte-secondaire: #000;
+    --texte-menu: #000;
+    --lien-principal: #000;
+    --lien-secondaire: #1a1c23;
+    --body-background: #fff;
+    --light-gray-bkg: #f1f1f1;
+    --main-bkg: #fff;
+    --button-color: #ffb85f;
+    --content-width: 1400px;
+    --border-mockup: 0;
+}
+
+/*
+    styles css préalables globaux. Nous utilisons le selecteur universel *
+    afin d'appliquer ces styles à absolument TOUS les éléments du document HTML
+*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+}
+
+/*
+    styles d'initialisation sur les éléments html et body
+    .On annule les marges interieures et exterieures
+    .on force la hauteur de ces élements à 100% et au minimum à la
+    hauteur de la zone visible sur l'écran (le viewport)
+    .on force un style de scroll progressif sur tous les
+    navigateurs sauf ceux de microsoft qui n'implémentent pas cette commande.
+*/
+html,
+body {
+    height: 100%;
+    min-height: 100vh;
+    scroll-behavior: smooth;
+}
+
+/*
+    reglage du body - styles par defaut:
+    . type de police
+    . taille de police
+    . couleur arriere plan
+    . couleur du texte
+*/
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 100%;
+    background: var(--body-background);
+    color: var(--texte-principal);
+}
