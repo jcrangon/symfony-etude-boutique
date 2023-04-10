@@ -4,7 +4,30 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+  #environnement
   app_param_env: "%env(APP_ENV)%"
+  #-----------------------------
+  #id de la balise body pour
+  # chaque page du site
+  HOME_PAGE: "home"
+  CART_PAGE: "cart"
+  ORDER_PAGE: "order"
+  CATEGORY_PAGE: "category"
+  PRODUCT_PAGE: "product"
+  ORDER_CONFIRMATION: "orderConfirmation"
+  SIGN_UP: "signup"
+  SIGN_IN: "signin"
+
+  MEMBER_PROFILE: "profile"
+  MEMBER_ORDER_HISTORY: "member-order-history"
+
+  ADMIN_DASHBOARD: "dasboard"
+  ADMIN_MEMBERS_MANAGEMENT: "members-management"
+  ADMIN_PRODUCTS_MANAGEMENT: "products-management"
+  ADMIN_ORDERS_MANAGEMENT: "orders-management"
+  ADMIN_CATEGORY_MANAGEMENT: "category-management"
+
+  PAGE_404: "page-404"
 
 services:
   # default configuration for services in *this* file

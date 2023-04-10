@@ -33,7 +33,12 @@
 		<link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
 
 	</head>
-	<body>
+	<body
+		id="{{ bodyId }}">
+
+		{# Inclusion de la modale de login #}
+		{% include "template-parts/modal-login.html.twig" %}
+
 		{# Inclusion de la barre de nav supérieure #}
 		{% include "template-parts/navbar.html.twig" %}
 
@@ -71,8 +76,7 @@
 urls: {
 // exemple:
 // home: "{{ path('app_home',{'slug': 'home-url'})|escape('js') }}"
-login: "{{ path('app_login')|escape('js') }}"
-
+login: "{{ absolute_url(path('app_login'))|escape('js') }}"
 }
 };
 		</script>

@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
@@ -42,6 +43,17 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        if ($request->isXmlHttpRequest()) {
+
+            $array = array('success' => true); // data to return via JSON
+            $response = new Response(json_encode($array));
+            $response->headers->set('Content-Type', 'application/json');
+
+            return $response;
+
+            // if form login
+        }
+
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
@@ -50,6 +62,20 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
 
         return new RedirectResponse($this->urlGenerator->generate($currentRoute));
     }
+
+
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
+    {
+        if ($request->isXmlHttpRequest()) {
+
+            $array = array('success' => false, 'message' => $exception->getMessage()); // data to return via JSON
+            $response = new Response(json_encode($array));
+            $response->headers->set('Content-Type', 'application/json');
+
+            return $response;
+        }
+    }
+
 
     protected function getLoginUrl(Request $request): string
     {

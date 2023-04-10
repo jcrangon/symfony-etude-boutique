@@ -239,3 +239,34 @@ App\Entity\Coupon:
       - Type:
           type: integer
           message: The value {{ value }} is not a valid {{ type }}.
+
+App\Entity\Carousel:
+  properties:
+    image:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 1
+          max: 100
+          minMessage: "field: image must be at least {{ limit }} characters long"
+          maxMessage: "field: image  cannot be longer than {{ limit }} characters"
+    position:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: integer
+          message: The value {{ value }} is not a valid {{ type }}.
+    emplacement:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 1
+          max: 100
+          minMessage: "field: emplacement must be at least {{ limit }} characters long"
+          maxMessage: "field: emplacement  cannot be longer than {{ limit }} characters"

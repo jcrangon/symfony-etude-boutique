@@ -6,6 +6,7 @@ use App\Entity\Membre;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
 use App\Security\UserAuthenticator;
+use App\Service\AppHelpers;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
@@ -21,10 +21,16 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 class RegistrationController extends AbstractController
 {
     private EmailVerifier $emailVerifier;
+    private $app;
+    private string $bodyId;
+    private $userInfo;
 
-    public function __construct(EmailVerifier $emailVerifier)
+    public function __construct(EmailVerifier $emailVerifier,  AppHelpers $app)
     {
+        $this->app = $app;
+        $this->bodyId = $app->getBodyId('SIGN_UP');
         $this->emailVerifier = $emailVerifier;
+        $this->userInfo = $app->getUser();
     }
 
 
@@ -73,6 +79,8 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+            'bodyId' => $this->bodyId,
+            'userInfo' => $this->userInfo,
         ]);
     }
 
@@ -97,6 +105,9 @@ class RegistrationController extends AbstractController
 
     public function postSignUp()
     {
-        return $this->render('registration/post_sign_up.html.twig', []);
+        return $this->render('registration/post_sign_up.html.twig', [
+            'bodyId' => $this->bodyId,
+            'userInfo' => $this->userInfo,
+        ]);
     }
 }

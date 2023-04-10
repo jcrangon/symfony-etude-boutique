@@ -1,0 +1,37 @@
+{% if carouselImg|length %}
+
+	<div id="{{ carouselId }}" class="carousel slide" data-bs-ride="carousel">
+		<div class="carousel-inner">
+			{# méthode proposée par Alexis #}
+			{# 
+									    Affecter la classe 'active' uniquement à l'élément 
+									    possédant la propriété de marquage 'etat'
+									    #}
+				{% for image in carouselImg %}
+					<div class="carousel-item {{ image.etat is defined ?  'active' : '' }}"> <img src="{{ asset('assets/img/carrousels/' ~ image.image )}}" class="d-block w-100" alt="carousel">
+				</div>
+			{% endfor %}
+
+
+			{# méthode tradi: #}
+			{# 
+									    {% set premier = carouselImg|first %} 		
+									    {% for image in carouselImg %}
+									      <div class="carousel-item {{ image == premier ?  'active' : '' }}">
+									          <img src="{{ asset('assets/img/carrousels/' ~ image.image )}}" class="d-block w-100" alt="carousel">
+									      </div>
+									    {% endfor %} 
+						      #}
+
+		</div>
+		<button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Previous</span>
+		</button>
+		<button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Next</span>
+		</button>
+	</div>
+
+{% endif %}

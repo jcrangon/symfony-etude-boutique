@@ -7,30 +7,49 @@
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 				<li class="nav-item">
-					<a class="nav-link active" aria-current="page" href="#">Home</a>
+
+					<a class="nav-link {{ bodyId == HOME_PAGE ? 'active' : '' }}" aria-current="page" href="{{ path('app_home') }}">Accueil</a>
+
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#">Link</a>
+					<a class="nav-link position-relative {{ bodyId == CART_PAGE ? 'active' : '' }}" href="#{# path vers la page panier #}">
+						Panier
+						<span class="position-absolute top-15 start-100 translate-middle badge rounded-pill bg-danger">0
+							{# quantité dans le panier #}
+						</span>
+					</a>
 				</li>
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-						Dropdown
+				<li class="nav-item dropdown ms-5">
+					<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						{{ userInfo.isLoggedIn ? 'Déconnexion' : 'Connexion' }}
 					</a>
 					<ul class="dropdown-menu">
-						<li>
-							<a class="dropdown-item" href="#">Action</a>
-						</li>
-						<li>
-							<a class="dropdown-item" href="#">Another action</a>
-						</li>
-						<li><hr class="dropdown-divider"></li>
-						<li>
-							<a class="dropdown-item" href="#">Something else here</a>
-						</li>
+						{% if userInfo.isAdmin %}
+							<li>
+								<a class="dropdown-item" href="{{ path('app_admin') }}">Back Office</a>
+							</li>
+							<li><hr class="dropdown-divider"></li>
+							<li>
+								<a class="dropdown-item deconnexion-trigger" href="{{ path('app_logout') }}">Déconnexion</a>
+							</li>
+						{% elseif userInfo.isLoggedIn %}
+							<li>
+								<a class="dropdown-item" href="{{ path('app_member') }}">Mon profile</a>
+							</li>
+							<li><hr class="dropdown-divider"></li>
+							<li>
+								<a class="dropdown-item deconnexion-trigger" href="{{ path('app_logout') }}">Déconnexion</a>
+							</li>
+						{% else %}
+							<li>
+								<a class="dropdown-item connexion-modal-trigger" href="#">Se connecter</a>
+							</li>
+							<li><hr class="dropdown-divider"></li>
+							<li>
+								<a class="dropdown-item" href="{{ path('app_register') }}">S'inscrire</a>
+							</li>
+						{% endif %}
 					</ul>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link disabled">Disabled</a>
 				</li>
 			</ul>
 			<form class="d-flex" role="search">

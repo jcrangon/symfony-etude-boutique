@@ -6,18 +6,10 @@
 
 {% block contentFullWidth %}
 
-	<div>
-		<p>Home Page -
-		</p>
-		<div {{ stimulus_controller('say-hello') }}>
-			<input type="text" {{ stimulus_target('say-hello', 'name') }}>
+	{# inclusion du carousel #}
+	{{ include('template-parts/home-carousel.html.twig') }}
 
-			<button {{ stimulus_action('say-hello', 'greet') }}>
-				Greet
-			</button>
-
-			<div {{ stimulus_target('say-hello', 'output') }}></div>
-		</div>
-	</div>
+	{# inclusion du breadcrumb #}
+	{{ include('template-parts/breadcrumb.html.twig') }}
 
 {% endblock %}

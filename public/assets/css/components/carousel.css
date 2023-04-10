@@ -1,0 +1,9 @@
+#homeCarousel {
+  padding: 0 1px 0 0;
+  margin-bottom: 40px;
+}
+
+.carousel-item {
+  height: 500px;
+  overflow: hidden;
+}
