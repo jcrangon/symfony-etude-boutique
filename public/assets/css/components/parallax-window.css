@@ -1,0 +1,12 @@
+.parallax-window {
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 60px;
+  font-weight: 900;
+  text-shadow: red 2px 5px;
+  color: rgb(132, 0, 255);
+  text-align: center;
+}

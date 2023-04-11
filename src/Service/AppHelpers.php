@@ -4,6 +4,7 @@ namespace App\Service;
 
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Carousel;
+use App\Entity\Categorie;
 use stdClass;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Security\Core\Security;
@@ -80,6 +81,37 @@ class AppHelpers
         "image" => "3.jpg",
         "position" => 3,
         "emplacement" => "home",
+      ],
+    ];
+  }
+
+  // installe les catégories dans la BDD
+  public function intallCategories()
+  {
+    $catList = $this->getCategoryList();
+
+    foreach ($catList as $cat) {
+      $category = new Categorie();
+      $category->setNom($cat['nom']);
+      $this->db->persist($category);
+    }
+    $this->db->flush();
+  }
+
+  // retourne tableau des catégories initiales de la BDD
+  private function getCategoryList(): array
+  {
+    return [
+      [
+        "nom" => "t-shirt"
+      ],
+
+      [
+        "nom" => "chemise"
+      ],
+
+      [
+        "nom" => "pull"
       ],
     ];
   }

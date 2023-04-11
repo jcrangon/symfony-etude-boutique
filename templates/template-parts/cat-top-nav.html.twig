@@ -1,0 +1,7 @@
+<nav id="top-menu">
+	{% for category in categories %}
+		<a class="flex-sm-fill text-sm-center nav-link bg-dark" style="color: white; border-radius:0;" href="#">
+			{{ category.nom|ucfirst }}
+		</a>
+	{% endfor %}
+</nav>

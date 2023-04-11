@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Carousel;
+use App\Entity\Categorie;
 use App\Service\AppHelpers;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,21 +27,37 @@ class HomeController extends AbstractController
 
     public function index(): Response
     {
+        // récupération des images de carousel dans la BDD
         $carouselImages = $this->db->getRepository(Carousel::class)->findBy(["emplacement" => "home"], ["position" => "ASC"]);
 
+        // marquage de la première image
+        // qui devra être notée comme 'active'
         if (isset($carouselImages[0])) {
             $carouselImages[0]->etat = 'active';
         }
 
+        // si pas d'image dans la BDD
+        // on installe les images dans la BDD
         if (!count($carouselImages)) {
             $this->app->installCarousel('home');
         }
 
+        // récupération des catégories dans la BDD
+        $categories = $this->db->getRepository(Categorie::class)->findAll();
+
+        // si aucune catégories trouvées on les
+        // installe dans la base.
+        if (!count($categories)) {
+            $this->app->intallCategories();
+        }
+
+        // render
         return $this->render('home/index.html.twig', [
             'bodyId' => $this->bodyId,
             'carouselImg' => $carouselImages,
             'carouselId' => 'homeCarousel',
             'userInfo' => $this->userInfo,
+            'categories' => $categories,
 
         ]);
     }

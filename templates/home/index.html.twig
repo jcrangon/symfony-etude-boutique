@@ -6,10 +6,50 @@
 
 {% block contentFullWidth %}
 
+	{# inclusion du menu de catégories superieur #}
+	{{ include('template-parts/cat-top-nav.html.twig') }}
+
 	{# inclusion du carousel #}
 	{{ include('template-parts/home-carousel.html.twig') }}
 
 	{# inclusion du breadcrumb #}
 	{{ include('template-parts/breadcrumb.html.twig') }}
+
+	<div
+		class="container">
+		{# titre de la section #}
+		<div class="row">
+			<div class="col h2">
+				<h2>NOS CATEGORIES</h2>
+			</div>
+		</div>
+
+		{# cartes des catégories #}
+		<div class="row mb-5">
+			<div class="d-flex flex-row justify-content-evenly flex-wrap">
+				{% for categorie in categories %}
+
+					<div class="card" style="width: 18rem;">
+
+						<img src="{{ asset(PRODUCT_CAT_IMG_FOLDER ~ categorie.nom ~ '.jpg') }}" class="card-img-top" alt="categorie" height="215px">
+
+						<div class="card-body">
+							<h5 class="card-title">{{ categorie.nom|ucfirst ~ 's' }}</h5>
+							<p class="card-text"></p>
+							<div class="text-center mt-5">
+								<a href="#" class="btn btn-outline-secondary">Voir tous les articles</a>
+							</div>
+
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<div class="parallax-window" data-parallax="scroll" data-image-src="{{ asset('assets/img/confettis.jpg') }}">
+		<p>Des Promos de ouf</p>
+		<p>tous les mois</p>
+	</div>
 
 {% endblock %}

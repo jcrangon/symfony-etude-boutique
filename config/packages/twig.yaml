@@ -14,6 +14,9 @@ twig:
     SIGN_UP: "signup"
     SIGN_IN: "signin"
 
+    PRODUCT_CAT_IMG_FOLDER: "assets/img/products/categories/img/"
+    PRODUCT_IMG_FOLDER: "assets/img/products/img/"
+
 when@test:
   twig:
     strict_variables: true
