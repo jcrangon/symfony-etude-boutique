@@ -2,8 +2,11 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,700");
 
 @import url('./components/global.css');
+@import url('./components/common.css');
 @import url('./components/flashes.css');
-@import url('./components/cat-top-menu.css');
+@import url('./components/top-menu.css');
 @import url('./components/carousel.css');
-@import url('./components/parallax-window.css');
+@import url('./components/parallax-section.css');
 @import url('./components/registerForm.css');
+@import url('./components/product.css');
+@import url('./components/checkout.css');

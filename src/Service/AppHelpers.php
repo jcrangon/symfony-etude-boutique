@@ -5,6 +5,7 @@ namespace App\Service;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Carousel;
 use App\Entity\Categorie;
+use App\Entity\Produit;
 use stdClass;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Security\Core\Security;
@@ -50,7 +51,35 @@ class AppHelpers
   }
 
 
-  public function installCarousel($emplacement): void
+  public function installBdd()
+  {
+    // récupération des images de carousel dans la BDD
+    $carouselImages = $this->db->getRepository(Carousel::class)->findBy(["emplacement" => "home"], ["position" => "ASC"]);
+
+    // si pas d'image dans la BDD
+    // on installe les images dans la BDD
+    if (!count($carouselImages)) {
+      $this->installCarousel('home');
+    }
+
+    // récupération des catégories dans la BDD
+    $categories = $this->db->getRepository(Categorie::class)->findAll();
+    // si aucune catégories trouvées on les
+    // installe dans la base.
+    if (!count($categories)) {
+      $this->intallCategories();
+    }
+
+    // récupération de tous les produits
+    $products = $this->db->getRepository(Produit::class)->findBy([], null, 1, null);
+    // si aucun produit trouvées on les
+    // installe dans la base.
+    if (!count($products)) {
+      $this->installProducts();
+    }
+  }
+
+  private function installCarousel($emplacement): void
   {
     $carouselList = $this->getCarouselList();
 
@@ -86,7 +115,7 @@ class AppHelpers
   }
 
   // installe les catégories dans la BDD
-  public function intallCategories()
+  private function intallCategories()
   {
     $catList = $this->getCategoryList();
 
@@ -112,6 +141,151 @@ class AppHelpers
 
       [
         "nom" => "pull"
+      ],
+    ];
+  }
+
+  private function installProducts()
+  {
+    $productList = $this->getProductList();
+    foreach ($productList as $product) {
+      $produit = new Produit();
+      $category = $this->db->getRepository(Categorie::class)->findOneBy(['nom' => $product['cat']]);
+      $produit->setCategorie($category);
+      $produit->setReference($product['reference']);
+      $produit->setTitre($product['titre']);
+      $produit->setDescription($product['description']);
+      $produit->setCouleur($product['couleur']);
+      $produit->setTaille($product['taille']);
+      $produit->setSexe($product['sexe']);
+      $produit->setPhoto($product['photo']);
+      $produit->setPrix($product['prix']);
+      $produit->setStock($product['stock']);
+
+      $this->db->persist($produit);
+    }
+
+    $this->db->flush();
+  }
+
+  private function getProductList(): array
+  {
+    return [
+      [
+        "reference" => "11-d-23",
+        "cat" => "t-shirt",
+        "titre" => "Tshirt Col V",
+        "description" => "Tee-shirt en coton flammé liseré contrastant",
+        "couleur" => "bleu",
+        "taille" => "M",
+        "sexe" => "m",
+        "photo" => "100_bleu.jpg",
+        "prix" => 20,
+        "stock" => 53,
+      ],
+
+      [
+        "reference" => "66-f-15",
+        "cat" => "t-shirt",
+        "titre" => "Tshirt Col V rouge",
+        "description" => "c\'est vraiment un super tshirt en soir&eacute;e !",
+        "couleur" => "rouge",
+        "taille" => "L",
+        "sexe" => "m",
+        "photo" => "102_rouge.png",
+        "prix" => 15,
+        "stock" => 230,
+      ],
+
+      [
+        "reference" => "88-g-77",
+        "cat" => "t-shirt",
+        "titre" => "Tshirt Col rond vert",
+        "description" => "Il vous faut ce tshirt Made In France !!!",
+        "couleur" => "vert",
+        "taille" => "L",
+        "sexe" => "m",
+        "photo" => "103_vert.png",
+        "prix" => 29,
+        "stock" => 63,
+      ],
+
+      [
+        "reference" => "55-b-38",
+        "cat" => "t-shirt",
+        "titre" => "Tshirt jaune",
+        "description" => "e jaune reviens &agrave; la mode, non? :-)",
+        "couleur" => "jaune",
+        "taille" => "S",
+        "sexe" => "m",
+        "photo" => "101_jaune.png",
+        "prix" => 20,
+        "stock" => 3,
+      ],
+
+      [
+        "reference" => "31-p-33",
+        "cat" => "t-shirt",
+        "titre" => "Tshirt noir original",
+        "description" => "voici un tshirt noir tr&egrave;s original :p",
+        "couleur" => "noir",
+        "taille" => "XL",
+        "sexe" => "m",
+        "photo" => "2332_full_t-shirt.jpg",
+        "prix" => 25,
+        "stock" => 80,
+      ],
+
+      [
+        "reference" => "56-a-65",
+        "cat" => "chemise",
+        "titre" => "Chemise Blanche",
+        "description" => "Les chemises c\'est bien mieux que les tshirts",
+        "couleur" => "blanc",
+        "taille" => "L",
+        "sexe" => "m",
+        "photo" => "105_chemiseblanchem.jpg",
+        "prix" => 49,
+        "stock" => 73,
+      ],
+
+      [
+        "reference" => "63-s-63",
+        "cat" => "chemise",
+        "titre" => "Chemise Noir",
+        "description" => "Comme vous pouvez le voir c\'est une chemise noir...",
+        "couleur" => "blanc",
+        "taille" => "M",
+        "sexe" => "m",
+        "photo" => "106_chemisenoirm.jpg",
+        "prix" => 59,
+        "stock" => 120,
+      ],
+
+      [
+        "reference" => "77-p-79",
+        "cat" => "pull",
+        "titre" => "Pull gris",
+        "description" => "Pull gris pour l\'hiver",
+        "couleur" => "gris",
+        "taille" => "XL",
+        "sexe" => "f",
+        "photo" => "104_pullgrism2.jpg",
+        "prix" => 79,
+        "stock" => 99,
+      ],
+
+      [
+        "reference" => "15-kjf-85",
+        "cat" => "t-shirt",
+        "titre" => "T-shirt homme à personnaliser",
+        "description" => "Superbe tshirt noir personnalisable!",
+        "couleur" => "noir",
+        "taille" => "L",
+        "sexe" => "m",
+        "photo" => "1648068059_tshirt_noir_l.webp",
+        "prix" => 16,
+        "stock" => 15,
       ],
     ];
   }

@@ -1,0 +1,67 @@
+{% extends 'layout-full-width.html.twig' %}
+
+{% block title %}Fake|Product
+{% endblock %}
+
+
+{% block contentFullWidth %}
+	{# inclusion du menu de catégories superieur #}
+	{{ include('template-parts/cat-top-nav.html.twig') }}
+	{# inclusion du breadcrumb #}
+	{{ include('template-parts/breadcrumb.html.twig') }}
+	<div class="container">
+		<div class="row">
+			<div class="col h2">
+				<h2>{{ product.titre|upper }}</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-8 mx-auto">
+				<div class="container">
+					<div
+						class="row">
+						<!-- Product image -->
+						<div class="col-md-7">
+							<img class="w-100" src="{{ absolute_url(asset(PRODUCT_IMG_FOLDER ~ product.photo)) }}" alt="product image">
+						</div>
+						<!-- Product info -->
+						<div class="col-md-5">
+							<div class="product-title">
+								{{ product.titre|capitalize  }}
+							</div>
+							<div class="product-details">
+								Couleur:
+								{{ product.couleur }}
+							</div>
+							<div class="product-details">
+								Taille:
+								{{ product.taille }}
+							</div>
+							<div class="product-details">
+								Sexe:{{ product.sexe == 'm' ? 'Homme' : 'Femme' }}
+							</div>
+							<div class="product-price">
+								{{ product.prix|format_currency('EUR')}}
+							</div>
+							<div class="product-details">
+								<?=$product['description']?>
+							</div>
+							<form id="addToCartForm" class="formCartAdd" method="post" action="">
+								<input class="hidden-id" type="hidden" value="<?=$product['id_produit'] ?>">
+								<input class="hidden-photo" type="hidden" value="<?=$product['photo'] ?>">
+								<input class="hidden-title" type="hidden" value="<?=$product['titre'] ?>">
+								<input class="hidden-cat" type="hidden" value="<?=$product['categorie'] ?>">
+								<input class="hidden-color" type="hidden" value="<?=$product['couleur'] ?>">
+								<input class="hidden-size" type="hidden" value="<?=$product['taille'] ?>">
+								<input class="hidden-price" type="hidden" value="<?=$product['prix'] ?>">
+
+								<button id="add-to-cart-btn" class="add-to-cart-btn" type="submit" name="addToCart" data-needsconnection="<?=$needsConnexion ? '1' : '0' ?>">Ajouter au Panier</button>
+							</form>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

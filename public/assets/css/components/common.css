@@ -1,0 +1,12 @@
+.h2 {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 40px;
+}
+
+.cursor-default {
+    cursor: default;
+  }
+  
+.cursor-pointer {
+  cursor: pointer;
+}

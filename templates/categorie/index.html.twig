@@ -1,0 +1,137 @@
+{% extends 'layout-full-width.html.twig' %}
+
+{% block title %}Fake|Categories
+{% endblock %}
+
+{% block contentFullWidth %}
+	{# inclusion du menu de catégories superieur #}
+	{{ include('template-parts/cat-top-nav.html.twig') }}
+	{# inclusion du breadcrumb #}
+	{{ include('template-parts/breadcrumb.html.twig') }}
+
+	{% if cat == null and gender == null %}
+		{# Si l'url ne comporte pas une cat ou un filtre #}
+		<div
+			class="container">
+			{# titre de la section #}
+			<div class="row">
+				<div class="col h2">
+					<h2>NOS CATEGORIES</h2>
+				</div>
+			</div>
+
+			{# cartes des catégories #}
+			<div class="row mb-5">
+				<div class="d-flex flex-row justify-content-evenly flex-wrap">
+					{% for categorie in categories %}
+
+						<div class="card" style="width: 18rem;">
+
+							<img src="{{ asset(PRODUCT_CAT_IMG_FOLDER ~ categorie.nom ~ '.jpg') }}" class="card-img-top" alt="categorie" height="215px">
+
+							<div class="card-body">
+								<h5 class="card-title">{{ categorie.nom|ucfirst ~ 's' }}</h5>
+								<p class="card-text"></p>
+								<div class="text-center mt-5">
+									<a href="{{ path('app_category', {cat: categorie.nom, gender: null}) }}" class="btn btn-outline-secondary">Voir tous les articles</a>
+								</div>
+
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	{% else %}
+		{# l'url comporte une cat ou un filtre ou les deux #}
+		<div class="container mt-5">
+
+			<div class="row">
+				<div class="col h2">
+					<h2>NOS
+						{{ cat|upper ~ 'S'}}</h2>
+				</div>
+			</div>
+
+			<div class="row">
+				<div
+					class="d-none d-md-block col-md-3 ">
+					<!-- menu lateral -->
+					<ul class="list-group side-menu">
+						<h5>Catégories:</h5>
+						{% for categorie in categories %}
+							<li class="list-group-item">
+								<a class="filter-links" href="{{ gender != null ? path('app_category', {cat: categorie.nom, gender: gender}) : path('app_category', {cat: categorie.nom}) }}">
+									{{ categorie.nom|upper ~ 'S'}}
+								</a>
+							</li>
+						{% endfor %}
+					</ul>
+
+					<ul class="list-group side-menu mt-5">
+						<h5>Filtre(s):</h5>
+						<li class="list-group-item {{ gender != null and gender == 'homme' ? 'active' : '' }}">
+
+							<a class="filter-links" href="{{ gender != null and gender == 'homme' ? path('app_category', {cat: cat}) : path('app_category', {cat: cat, gender: 'homme'}) }}" target="_self">
+								Homme
+							</a>
+						</li>
+
+						<li class="list-group-item {{ gender != null and gender == 'femme' ? 'active' : '' }}">
+							<a class="filter-links" href="{{ gender != null and gender == 'femme' ? path('app_category', {cat: cat}) : path('app_category', {cat: cat, gender: 'femme'}) }}" target="_self">
+								Femme
+							</a>
+						</li>
+					</ul>
+
+				</div>
+
+				<div
+					class="col-md-9">
+					<!-- Liste des produits de la catégorie sélectionnée -->
+					<div class="container">
+						<div class="row">
+							<div class="d-flex justify-content-evenly flex-wrap">
+
+
+								{% if not products|length %}
+									<!-- Pas de produits trouvés -->
+									<div class="container mb-5">
+										<div class="row">
+											<div class="col-sm-4 pb-3 mx-auto bg-light text-center d-flex flex-column justify-content-center">
+												<p>AUCUN PRODUIT TROUVE!</p>
+												<div class="text-center">
+													<a href="{{ path('app_category') }}" class="btn btn-outline-success">Retour aux catégories</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								{% else %}
+									<!-- Des produits existent dans la categorie/genre selectionné -->
+									{% for product in products %}
+										<div class="card mb-5" style="width: 18rem;">
+											<img src="{{ absolute_url(asset(PRODUCT_IMG_FOLDER ~ product.photo)) }}" alt="product image">
+											<div class="card-body">
+												<h5 class="card-title">{{ product.titre }}</h5>
+												<p class="card-text product-description-container">{{ product.description }}</p>
+												<p class="card-text product-price">{{ product.prix ~ ' Euros' }}</p>
+												<div class="text-center">
+													<a href="{{ path('app_product', {cat: cat, id: product.id}) }}" class="btn btn-outline-secondary">Voir l'article</a>
+												</div>
+											</div>
+										</div>
+									{% endfor %}
+
+								{% endif %}
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}
+
+{# Block reassurance inférieur #}
+{% block bottomReassurance %}{% endblock %}

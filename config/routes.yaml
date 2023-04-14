@@ -67,10 +67,30 @@ controllers:
 #     syntaxe pour les conditions: https://symfony.com/doc/2.8/components/expression_language/syntax.html
 #     condition: "request.headers.get('User-Agent') matches '/firefox/i'"
 
-app_home:
+# Front Office
+app_home: # Page Accueil
   path: /
   controller: App\Controller\HomeController::index
 
+app_category: # Page toutes les catégories
+  path: /categories/{cat}/{gender}
+  controller: App\Controller\CategorieController::index
+  methods: GET
+  defaults:
+    cat: null
+    gender: null
+
+app_product:
+  path: /product/{cat}/{id}
+  controller: App\Controller\ProductController::index
+  methods: GET
+  defaults:
+    cat: null
+    id: null
+  requirements:
+    id: '\d+'
+
+# Back Office Admin
 app_admin:
   path: /admin
   controller: App\Controller\AdminController::dashboard
@@ -79,10 +99,12 @@ app_admin_member_management:
   path: /admin/members
   controller: App\Controller\AdminController::memberManagement
 
+# Back Office Member
 app_member:
   path: member/profile
   controller: App\Controller\MemberController::dashboard
 
+# Login / Logout
 app_login:
   path: /login
   controller: App\Controller\SecurityController::login
@@ -92,6 +114,7 @@ app_logout:
   path: /logout
   methods: GET
 
+# Inscription
 app_register:
   path: /register
   controller: App\Controller\RegistrationController::register

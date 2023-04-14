@@ -37,7 +37,7 @@
 							<h5 class="card-title">{{ categorie.nom|ucfirst ~ 's' }}</h5>
 							<p class="card-text"></p>
 							<div class="text-center mt-5">
-								<a href="#" class="btn btn-outline-secondary">Voir tous les articles</a>
+								<a href="{{ path('app_category', {cat: categorie.nom, gender: null}) }}" class="btn btn-outline-secondary">Voir tous les articles</a>
 							</div>
 
 						</div>

@@ -5,5 +5,46 @@
 
 		{% endif %}
 
+		{% if bodyId == CATEGORY_PAGE %}
+			{% if cat == null and gender == null %}
+				<li class="breadcrumb-item" aria-current="page">
+					<a href="{{ path('app_home') }}">Accueil</a>
+
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">Toutes les catégories</li>
+			{% else %}
+				<li class="breadcrumb-item" aria-current="page">
+					<a href="{{ path('app_home') }}">Accueil</a>
+				</li>
+				{% if gender == null %}
+					<li class="breadcrumb-item active" aria-current="page">
+						<a href="{{ path('app_category') }}">Toutes les catégories</a>
+					</li>
+					<li class="breadcrumb-item" aria-current="page">{{ cat }}</li>
+				{% else %}
+					<li class="breadcrumb-item active" aria-current="page">
+						<a href="{{ path('app_category') }}">Toutes les catégories</a>
+					</li>
+					<li class="breadcrumb-item active" aria-current="page">
+						<a href="{{ path('app_category', {cat: cat}) }}">{{ cat }}</a>
+					</li>
+					<li class="breadcrumb-item" aria-current="page">{{ gender }}</li>
+				{% endif %}
+			{% endif %}
+		{% endif %}
+
+		{% if bodyId == PRODUCT_PAGE %}
+			<li class="breadcrumb-item" aria-current="page">
+				<a href="{{ path('app_home') }}">Accueil</a>
+			</li>
+			<li class="breadcrumb-item" aria-current="page">
+				<a href="{{ path('app_category') }}">Toutes les catégories</a>
+			</li>
+			<li class="breadcrumb-item" aria-current="page">
+				<a href="{{ path('app_category', {cat: cat}) }}">{{ cat }}</a>
+			</li>
+			<li class="breadcrumb-item active" aria-current="page">{{ product.titre }}</li>
+		{% endif %}
+
 	</ol>
 </nav>

@@ -1,0 +1,7 @@
+/*Importations*/
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,700");
+
+@import url('./components/global.css');
+@import url('./components/flashes.css');
+@import url('./components/simple-sidebar.css');
+@import url('./components/admin-common.css');
