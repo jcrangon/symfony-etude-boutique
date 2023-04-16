@@ -2,13 +2,14 @@
 
 namespace App\Service;
 
-use Doctrine\Persistence\ManagerRegistry;
+
 use App\Entity\Carousel;
 use App\Entity\Categorie;
 use App\Entity\Produit;
 use stdClass;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Security\Core\Security;
+use Doctrine\Persistence\ManagerRegistry;
 
 class AppHelpers
 {

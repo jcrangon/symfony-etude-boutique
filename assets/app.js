@@ -9,6 +9,7 @@
 import './js/parallax.js';
 import './styles/app.scss';
 import './js/app.js';
+import './js/cart.js';
 
 // start the Stimulus application
 import './bootstrap';

@@ -12,11 +12,13 @@
 
 				</li>
 				<li class="nav-item">
-					<a class="nav-link position-relative {{ bodyId == CART_PAGE ? 'active' : '' }}" href="#{# path vers la page panier #}">
+					<a class="nav-link position-relative {{ bodyId == CART_PAGE ? 'active' : '' }}" href="{% if not userInfo.user is null %}#{% else %}#{% endif %}">
 						Panier
-						<span class="position-absolute top-15 start-100 translate-middle badge rounded-pill bg-danger">0
-							{# quantité dans le panier #}
-						</span>
+						{% if not userInfo.user is null %}
+							<span class="position-absolute top-15 start-100 translate-middle badge rounded-pill bg-danger">
+								{{ cartCount }}
+							</span>
+						{% endif %}
 					</a>
 				</li>
 				<li class="nav-item dropdown ms-5">

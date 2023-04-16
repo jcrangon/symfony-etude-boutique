@@ -46,16 +46,14 @@
 							<div class="product-details">
 								<?=$product['description']?>
 							</div>
-							<form id="addToCartForm" class="formCartAdd" method="post" action="">
-								<input class="hidden-id" type="hidden" value="<?=$product['id_produit'] ?>">
-								<input class="hidden-photo" type="hidden" value="<?=$product['photo'] ?>">
-								<input class="hidden-title" type="hidden" value="<?=$product['titre'] ?>">
-								<input class="hidden-cat" type="hidden" value="<?=$product['categorie'] ?>">
-								<input class="hidden-color" type="hidden" value="<?=$product['couleur'] ?>">
-								<input class="hidden-size" type="hidden" value="<?=$product['taille'] ?>">
-								<input class="hidden-price" type="hidden" value="<?=$product['prix'] ?>">
+							{% if product.stock == 0 %}
+								<p class="text-danger">Article épuisé !</p>
+							{% else %}
+								<form id="addToCartForm" class="formCartAdd" method="post" action="">
+									<input class="hidden-id" type="hidden" value="{{ product.id }}">
 
-								<button id="add-to-cart-btn" class="add-to-cart-btn" type="submit" name="addToCart" data-needsconnection="<?=$needsConnexion ? '1' : '0' ?>">Ajouter au Panier</button>
+									<button id="add-to-cart-btn" class="add-to-cart-btn" type="submit" name="addToCart" data-needsconnection="{{ userInfo.isLoggedIn ? '0' : '1' }}">Ajouter au Panier</button>
+								{% endif %}
 							</form>
 						</div>
 					</div>

@@ -90,6 +90,11 @@ app_product:
   requirements:
     id: '\d+'
 
+app_add_to_cart:
+  path: /cart
+  controller: App\Controller\CartController::index
+  methods: POST
+
 # Back Office Admin
 app_admin:
   path: /admin

@@ -101,6 +101,9 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
+    #[ORM\OneToOne(targetEntity: Panier::class, mappedBy: 'membre')]
+    private ?Panier $panier = null;
+
     #[ORM\ManyToMany(targetEntity: Coupon::class, inversedBy: 'membres')]
     private Collection $coupon;
 
@@ -433,5 +436,18 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         $this->coupon->removeElement($coupon);
 
         return $this;
+    }
+
+    public function setPanier(Panier $panier): self
+    {
+        $this->panier = $panier;
+
+        return $this;
+    }
+
+    public function getPanier(): ?Panier
+    {
+
+        return $this->panier;
     }
 }
