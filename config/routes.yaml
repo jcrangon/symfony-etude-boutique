@@ -131,3 +131,21 @@ app_verify_email:
 app_email_conf_sent:
   path: /signup/confirmation
   controller: App\Controller\RegistrationController::postSignUp
+
+# Stripe
+app_stripe:
+  path: /stripe
+  controller: App\Controller\StripeController::index
+
+app_stripe_charge:
+  path: /stripe/create-charge
+  controller: App\Controller\StripeController::createCharge
+  methods: POST
+
+app_stripe_success:
+  path: /order/confirmation
+  controller: App\Controller\StripeController::orderConfirmation
+
+app_stripe_fail:
+  path: /payment/failure
+  controller: App\Controller\StripeController::paymentFailure

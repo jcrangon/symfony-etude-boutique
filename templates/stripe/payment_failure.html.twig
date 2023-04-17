@@ -1,0 +1,14 @@
+{% extends 'layout-full-width.html.twig' %}
+
+{% block title %}Confirmation
+{% endblock %}
+
+{% block contentFullWidth %}
+	<div>
+		<div class="mt-5 p-5 border border-primary d-flex flex-column justify-content-center align-items-center">
+			<h3>Nous somme désolé, le service de paiement nous a retourné la réponse suivante:</h3>
+			<h4 class="fw-bold text-danger">{{ error }}</h4>
+			<a class="btn btn-outline-primary mt-3" href="{{ path('app_stripe') }}">Retour à la page de paiement</a>
+		</div>
+	</div>
+{% endblock %}
