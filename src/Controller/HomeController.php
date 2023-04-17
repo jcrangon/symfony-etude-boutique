@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Carousel;
 use App\Entity\Categorie;
-use App\Service\AppHelpers;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use App\Service\AppHelpers;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
 use App\Service\PanierManager;
 use Symfony\Component\HttpFoundation\RequestStack;

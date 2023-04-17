@@ -17,6 +17,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use App\Service\PanierManager;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class RegistrationController extends AbstractController
 {
@@ -24,13 +26,25 @@ class RegistrationController extends AbstractController
     private $app;
     private string $bodyId;
     private $userInfo;
+    private $cartCount;
+    private $session;
 
-    public function __construct(EmailVerifier $emailVerifier,  AppHelpers $app)
+    public function __construct(EmailVerifier $emailVerifier,  AppHelpers $app, PanierManager $cartManager, RequestStack $requestStack)
     {
         $this->app = $app;
         $this->bodyId = $app->getBodyId('SIGN_UP');
         $this->emailVerifier = $emailVerifier;
         $this->userInfo = $app->getUser();
+
+        $this->session = $requestStack->getSession();
+        if (null !== $this->userInfo->user) {
+            if (null !== $this->session->get('cartCount')) {
+                $this->cartCount = (int)$this->session->get('cartCount');
+            } else {
+                $this->session->set('cartCount', $cartManager->getCartCount($this->userInfo->user));
+                $this->cartCount = (int)$this->session->get('cartCount');
+            }
+        }
     }
 
 
@@ -108,6 +122,7 @@ class RegistrationController extends AbstractController
         return $this->render('registration/post_sign_up.html.twig', [
             'bodyId' => $this->bodyId,
             'userInfo' => $this->userInfo,
+            'cartCount' => $this->cartCount,
         ]);
     }
 }
