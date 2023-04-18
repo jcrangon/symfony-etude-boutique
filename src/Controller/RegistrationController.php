@@ -95,6 +95,7 @@ class RegistrationController extends AbstractController
             'registrationForm' => $form->createView(),
             'bodyId' => $this->bodyId,
             'userInfo' => $this->userInfo,
+            'cartCount' => $this->cartCount,
         ]);
     }
 
