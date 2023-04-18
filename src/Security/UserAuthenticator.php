@@ -59,6 +59,9 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         $currentRoute = $request->get('_route');
+        if ($currentRoute == 'app_register') {
+            $currentRoute = 'app_home';
+        }
 
         return new RedirectResponse($this->urlGenerator->generate($currentRoute));
     }
