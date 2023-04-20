@@ -9,6 +9,7 @@ use App\Entity\Produit;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Security\Core\Security;
 use Doctrine\Persistence\ManagerRegistry;
+use stdClass;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class PanierManager
@@ -98,11 +99,42 @@ class PanierManager
 
   public function getCartCount(Membre $user): int
   {
+    // on recupère le panier de l'utilisateur
     $panier = $user->getPanier();
+
+    // on retourne le nombre d'article dans le panier
     if ($panier) {
       return $panier->getCountArticle();
     } else {
       return 0;
     }
+  }
+
+  public function calculePanier(Panier $panier, float $tauxTva): stdClass
+  {
+    // on récupere les lignes d'articles du panier
+    $articles = $panier->getArticle();
+
+    // on initialise le total panier
+    $totalTTC = 0;
+    // on boucle sur les article pour trouver le prix total ttc
+    foreach ($articles as $article) {
+      $totalTTC += $article->getProduit()->getPrix();
+    }
+    // on en deduit le total ht
+    $totalHT = round($totalTTC / (($tauxTva / 100) + 1), 2, PHP_ROUND_HALF_UP);
+
+    // on en déduit le montant tva
+    $totalTVA = $totalTTC - $totalHT;
+
+    // on definit un objet de données
+    $out = new stdClass();
+    $out->totalTTC = $totalTTC;
+    $out->totalHT = $totalHT;
+    $out->totalTVA = $totalTVA;
+    $out->tauxTva = $tauxTva;
+
+    // on renvoi cet objet
+    return $out;
   }
 }

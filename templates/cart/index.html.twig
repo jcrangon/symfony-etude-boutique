@@ -3,4 +3,115 @@
 {% block title %}Fake|Panier
 {% endblock %}
 
-{% block contentFullWidth %}{% endblock %}
+{% block contentFullWidth %}
+	<div class="container">
+		<div class="row">
+			<div class="col h2">
+				<h2 class="d-inline-block">VOS ARTICLES</h2>
+				<span class="small-font">({{ cartCount }}
+					articles)</span>
+			</div>
+		</div>
+		<div class="row">
+			<table class="table table-responsive  mb-5">
+				<thead>
+					<tr>
+						{% for hdg in tableHeadings %}
+							<th>{{ hdg }}</th>
+						{% endfor %}
+					</tr>
+				</thead>
+
+				<tbody>
+					{% if not articles|length %}
+						<tr>
+							<td colspan="6" class="text-center">
+								Aucun produit trouvé
+							</td>
+						</tr>
+					{% else %}
+						{% for article in articles %}
+							<tr>
+								<td class="cart-img-cell">
+									<a href="{{ absolute_url(path('app_product', {'cat': article.produit.categorie.nom, 'id': article.produit.id})) }}" target="_self">
+										<img class="img-fluid" src="{{ absolute_url(asset(PRODUCT_IMG_FOLDER ~ article.produit.photo)) }}" alt="product image" width="150px">
+									</a>
+								</td>
+								<td>
+									{{ article.produit.titre }}
+									<div class="pt-5">
+										<a
+											class="cart-delete-link" href="#">
+											<!-- <img src="<?= HTTP_IMG_DIR . 'close-icon.svg' ?>" alt="close icon" width="20px"> -->
+											<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve" width="20" fill="#aaa">
+												<path d="M9.016,40.837c0.195,0.195,0.451,0.292,0.707,0.292c0.256,0,0.512-0.098,0.708-0.293l14.292-14.309
+																																																																																																																																																																																																																																																																                                            l14.292,14.309c0.195,0.196,0.451,0.293,0.708,0.293c0.256,0,0.512-0.098,0.707-0.292c0.391-0.39,0.391-1.023,0.001-1.414
+																																																																																																																																																																																																																																																																                                            L26.153,25.129L40.43,10.836c0.39-0.391,0.39-1.024-0.001-1.414c-0.392-0.391-1.024-0.391-1.414,0.001L24.722,23.732L10.43,9.423
+																																																																																																																																																																																																																																																																                                            c-0.391-0.391-1.024-0.391-1.414-0.001c-0.391,0.39-0.391,1.023-0.001,1.414l14.276,14.293L9.015,39.423
+																																																																																																																																																																																																																																																																                                            C8.625,39.813,8.625,40.447,9.016,40.837z"/>
+											</svg>
+											Supprimer
+										</a>
+									</div>
+								</td>
+								<td>
+									{{ article.produit.couleur }}
+								</td>
+								<td>
+									{{ article.produit.taille }}
+								</td>
+								<td>
+									{{ article.quantity }}
+								</td>
+								<td>
+									{{ article.produit.prix|format_currency('EUR') }}
+								</td>
+							</tr>
+						{% endfor %}
+					{% endif %}
+				</tbody>
+			</table>
+		</div>
+		<div class="row">
+			<div class="col-md-3 offset-md-9 mt-5 bg-light">
+				<div class="container">
+					<div class="row mb-3">
+						<div class="col-md-7 d-flex justify-content-end">
+							Total HT:
+						</div>
+						<div class="col-md-5 d-flex justify-content-end">
+							{{ totalPanier.totalHT|format_currency('EUR') }}
+						</div>
+					</div>
+
+					<div class="row mb-3 border-0 border-bottom">
+						<div class="col-md-7 d-flex justify-content-end">
+							TVA(20%):
+						</div>
+						<div class="col-md-5 d-flex justify-content-end pb-2">
+							{{ totalPanier.totalTVA|format_currency('EUR') }}
+						</div>
+					</div>
+
+					<div class="row  mb-3">
+						<div class="col-md-7 d-flex justify-content-end">
+							Total TTC:
+						</div>
+						<div class="col-md-5 d-flex justify-content-end">
+							<strong>{{ totalPanier.totalTTC|format_currency('EUR') }}</strong>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row mt-5">
+			<div class="col-md-8 mx-auto border-top border-light d-flex justify-content-between pt-3">
+				<a class="btn btn-outline-dark cart-btn" href="{{ path('app_category') }}" role="button">Continuer mes achats</a>
+				{% if cartCount %}
+					<a class="btn btn-outline-dark cart-btn" href="{{ path('app_order', {'step': step}) }}" role="button">Commander</a>
+				{% endif %}
+			</div>
+
+		</div>
+	</div>
+{% endblock %}

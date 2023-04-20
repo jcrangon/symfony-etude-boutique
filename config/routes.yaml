@@ -95,6 +95,14 @@ app_add_to_cart:
   controller: App\Controller\CartController::index
   methods: POST
 
+app_cart:
+  path: /cart/details
+  controller: App\Controller\CartController::cartDetails
+
+app_order:
+  path: /order/step/{step}
+  controller: App\Controller\OrderController::index
+
 # Back Office Admin
 app_admin:
   path: /admin

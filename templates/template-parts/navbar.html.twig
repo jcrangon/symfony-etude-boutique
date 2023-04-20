@@ -12,7 +12,7 @@
 
 				</li>
 				<li class="nav-item">
-					<a class="nav-link position-relative {{ bodyId == CART_PAGE ? 'active' : '' }}" href="{% if not userInfo.user is null %}#{% else %}#{% endif %}">
+					<a class="nav-link position-relative {{ bodyId == CART_PAGE ? 'active' : '' }}" href="{% if userInfo.user is null %}javascript:void(0){% else %} {{ path('app_cart') }} {% endif %}">
 						Panier
 						{% if not userInfo.user is null %}
 							<span class="position-absolute top-15 start-100 translate-middle badge rounded-pill bg-danger">

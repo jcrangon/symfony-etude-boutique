@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Carousel;
-use App\Entity\Categorie;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use App\Service\AppHelpers;
@@ -12,7 +10,7 @@ use Symfony\Component\Security\Core\Security;
 use App\Service\PanierManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class HomeController extends AbstractController
+class OrderController extends AbstractController
 {
     private string $bodyId;
     private $app;
@@ -41,29 +39,10 @@ class HomeController extends AbstractController
 
     public function index(): Response
     {
-        // on vérifie que la Bdd est prête.
-        $this->app->installBdd();
-        // récupération des images de carousel dans la BDD
-        $carouselImages = $this->db->getRepository(Carousel::class)->findBy(["emplacement" => "home"], ["position" => "ASC"]);
-
-        // marquage de la première image
-        // qui devra être notée comme 'active'
-        if (isset($carouselImages[0])) {
-            $carouselImages[0]->etat = 'active';
-        }
-
-        // récupération des catégories dans la BDD
-        $categories = $this->db->getRepository(Categorie::class)->findAll();
-
-        // render
-        return $this->render('home/index.html.twig', [
+        return $this->render('order/index.html.twig', [
             'bodyId' => $this->bodyId,
-            'carouselImg' => $carouselImages,
-            'carouselId' => 'homeCarousel',
             'userInfo' => $this->userInfo,
-            'categories' => $categories,
             'cartCount' => $this->cartCount,
-
         ]);
     }
 }
