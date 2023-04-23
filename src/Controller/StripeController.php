@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\PaymentMethod;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,18 +38,18 @@ class StripeController extends AbstractController
                 $this->cartCount = (int)$this->session->get('cartCount');
             }
         }
-
-        // on simule le montant obtenu depuis la page de commande:
-        $this->session->set('orderTotal', 52.6);
     }
     public function index(): Response
     {
+        $method = $this->db->getRepository(PaymentMethod::class)->find((int)$this->session->get('checkoutData')['payment']['method']);
         return $this->render('stripe/index.html.twig', [
             'clef_stripe' => $_ENV["STRIPE_KEY"],
             'bodyId' => $this->bodyId,
             'cartCount' => $this->cartCount,
             'userInfo' => $this->userInfo,
-            'orderTotal' => $this->session->get('orderTotal'),
+            'orderTotal' => (float)$this->session->get('checkoutData')['orderTotals']['totalTTC'],
+            'checkoutData' => $this->session->get('checkoutData'),
+            'method' => $method,
         ]);
     }
 
@@ -57,7 +58,7 @@ class StripeController extends AbstractController
         Stripe\Stripe::setApiKey($_ENV["STRIPE_SECRET"]);
         try {
             Stripe\Charge::create([
-                "amount" => $this->session->get('orderTotal') * 100,
+                "amount" => (float)$this->session->get('checkoutData')['orderTotals']['totalTTC'] * 100,
                 "currency" => "eur",
                 "source" => $request->request->get('stripeToken'),
                 "description" => "Payment Test"

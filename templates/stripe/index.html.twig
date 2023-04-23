@@ -5,6 +5,161 @@
 
 {% block body %}
 	<div>
+		<?php
+
+    // Calcul des prix
+    //prix HT
+    $prixTotHT = 0;
+
+    //prix articles
+    if(isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+        foreach($_SESSION['cart'] as $article) {
+            $prixTotHT += ((int)$article['price'] * (int)$article['qty']);
+        }
+    }
+    // methode de livraison
+    $totalLivraison = 0;
+    if(isset($_SESSION['shipping']['method'])) {
+        $totalLivraison = $shippingOtions[$_SESSION['shipping']['method']]['prixHT'];
+    }
+    
+    // total HT
+    $totalHT = $prixTotHT + $totalLivraison;
+
+    // tva
+    $tva20 = round(($totalHT * 20/100),2, PHP_ROUND_HALF_UP);
+
+    // prix TTC
+    $prixTotTTC = $totalHT + $tva20;
+
+    // Formatteur de prix
+    $fmt = new NumberFormatter( 'fr_FR', NumberFormatter::CURRENCY );
+
+?>
+
+		<div class="container mt-4">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="container">
+						<div class="row">
+							<div class="col bg-light">
+								<h4>
+									Finalisation de ma commande
+								</h4>
+								<p>
+									<small>Veuillez vérifier les informations fournies.</small>
+								</p>
+							</div>
+						</div>
+
+						<div class="vr"></div>
+
+						<div class="row ">
+							<div class="col bg-light">
+								<h6>
+									<em>Adresse de livraison</em>
+								</h6>
+								<p>{{ checkoutData.adresseLivraison.adresse }}<br>{{ checkoutData.adresseLivraison.codePostal }}
+									{{ checkoutData.adresseLivraison.ville }}</p>
+							</div>
+						</div>
+
+						<div class="vr"></div>
+
+						<div class="row ">
+							<div class="col bg-light">
+								<h6>
+									<em>Mode de livraison</em>
+								</h6>
+								<p>{{ checkoutData.shippingMethod.nom }}</p>
+							</div>
+						</div>
+
+						<div class="vr"></div>
+
+						<div class="row ">
+							<div class="col bg-light">
+								<h6>
+									<em>Moyen de Paiement</em>
+								</h6>
+								<p>
+									<img class="me-2" src="{{ asset('assets/img/'~ method.img) }}" width="{{ method.width }}" alt="payment method">
+									<label class="form-check-label" for="paymentMethodOption{{ method.id }}">
+										{{ method.name }}
+									</label>
+								</p>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="col-md-3 offset-3">
+					<div class="container bg-light pb-4">
+						<div class="row">
+							<h4>Panier:</h4>
+						</div>
+						<div class="row mb-3">
+							<div class="col-md-7 d-flex justify-content-end">
+								<em>Total Articles HT:</em>
+							</div>
+							<div class="col-md-5 d-flex justify-content-end">
+								{{ checkoutData.orderTotals.cartTotals.totalHT|format_currency('EUR') }}
+							</div>
+						</div>
+
+						<div class="row pb-2 mb-1 border-0 border-bottom">
+							<div class="col-md-7 d-flex justify-content-end">
+								<em>Livraison:</em>
+								<span style="color:red;">*</span>
+							</div>
+							<div class="col-md-5 d-flex justify-content-end">
+								{{ checkoutData.orderTotals.totalLivraisonHT|format_currency('EUR') }}
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-7 d-flex justify-content-end">
+								<em>Total HT:</em>
+							</div>
+							<div class="col-md-5 d-flex justify-content-end">
+								{{ (checkoutData.orderTotals.cartTotals.totalHT + checkoutData.orderTotals.totalLivraisonHT)|format_currency('EUR') }}
+							</div>
+						</div>
+
+						<div class="row mb-3 border-0 border-bottom">
+							<div class="col-md-7 d-flex justify-content-end">
+								<em>TVA(20%):</em>
+							</div>
+							<div class="col-md-5 d-flex justify-content-end pb-2">
+								{{ checkoutData.orderTotals.tva20|format_currency('EUR') }}
+							</div>
+						</div>
+
+						<div class="row  mb-3">
+							<div class="col-md-7 d-flex justify-content-end">
+								Total TTC:
+							</div>
+							<div class="col-md-5 d-flex justify-content-end">
+								<strong>
+									{{ checkoutData.orderTotals.totalTTC|format_currency('EUR') }}
+								</strong>
+							</div>
+						</div>
+						<div class="row  mb-3">
+							<div class="col d-flex justify-content-start">
+								<span style="color:red;">*</span>
+								<span class="text-secondary">
+									<small>{{ checkoutData.shippingMethod.nom }}</small>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="checkout-step" data-step="4"></div>
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-4">
@@ -12,16 +167,35 @@
 						<div class="card-body">
 							{% for message in app.flashes('success') %}
 								<div style="color: green;
-																																																																																																																																																																																																																																						                                    border: 2px green solid;
-																																																																																																																																																																																																																																						                                    text-align: center;
-																																																																																																																																																																																																																																						                                    padding: 5px;margin-bottom: 10px;">
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																								                                    border: 2px green solid;
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																								                                    text-align: center;
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																								                                    padding: 5px;margin-bottom: 10px;">
 									{{ message }}
 								</div>
 							{% endfor %}
 
 							<form id='checkout-form' method='post' action="{{ path('app_stripe_charge') }}">
+
 								<input type='hidden' name='stripeToken' id='stripe-token-id'>
-								<label for="card-element" class="mb-5">Checkout Forms</label>
+								<div class="d-flex flex-row align-items-center">
+									<svg class="SVGInline-svg SVGInline--cleaned-svg SVG-svg ProductIcon-svg" height="32" width="32" viewbox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path d="M34.613 11.275a2.563 2.563 0 0 0-1.223-1.031L8.545.19a2.574 2.574 0 0 0-2.409.252A2.582 2.582 0 0 0 5 2.584V15c0 1.053.638 2 1.613 2.394L13.053 20l21.56 8.722c.254-.409.388-.881.387-1.363V12.637a2.566 2.566 0 0 0-.387-1.362Z" fill="url(#pi_payments__a)"></path>
+										<path d="M34.625 11.278 13.06 20l-6.446 2.61A2.578 2.578 0 0 0 5 25v12.416a2.576 2.576 0 0 0 3.543 2.394l24.858-10.054a2.54 2.54 0 0 0 1.212-1.037c.254-.41.388-.881.387-1.363V12.641a2.566 2.566 0 0 0-.375-1.363Z" fill="#96F"></path>
+										<path d="m34.617 11.282.097.172c.189.365.287.77.286 1.184l-.001-.023v14.741c.001.482-.133.954-.387 1.363l-.001.001-21.554-8.719h.003l21.557-8.719Z" fill="url(#pi_payments__b)"></path>
+										<defs>
+											<linearGradient id="pi_payments__a" x1="20" y1="4.128" x2="20" y2="21.128" gradientunits="userSpaceOnUse">
+												<stop stop-color="#11EFE3"></stop>
+												<stop offset="1" stop-color="#21CFE0"></stop>
+											</linearGradient>
+											<linearGradient id="pi_payments__b" x1="35" y1="11.282" x2="35" y2="28.72" gradientunits="userSpaceOnUse">
+												<stop stop-color="#0048E5"></stop>
+												<stop offset="1" stop-color="#9B66FF"></stop>
+											</linearGradient>
+										</defs>
+									</svg>
+
+									<label for="card-element " class="h3 mt-2 ms-2">Paiement STRIPE</label>
+								</div>
 								<br>
 								<div id="card-element" class="form-control"></div>
 								<button id='pay-btn' class="btn btn-success mt-3" type="button" style="margin-top: 20px; width: 100%;padding: 7px;" onclick="createToken()">Payer
@@ -32,7 +206,13 @@
 						</div>
 					</div>
 				</div>
-
+				<div class="container">
+					<div class="row">
+						<div class="col border-top border-secondary mt-5 d-flex justify-content-between pt-3">
+							<a class="btn btn-outline-dark cart-btn d-inline-block" href="{{ absolute_url(path('app_order', {step: 3})) }}" role="button">Etape précédente</a>
+						</div>
+					</div>
+				</div>
 				<script src="https://js.stripe.com/v3/"></script>
 				<script>
 					const stripe = Stripe("{{ clef_stripe }}");

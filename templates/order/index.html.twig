@@ -4,5 +4,65 @@
 {% endblock %}
 
 {% block contentFullWidth %}
-	<div></div>
+	<div class="container">
+		<div class="row etapes position-relative ">
+			<div class="col pt-5">
+				<div class="progressb">
+					<div class="step step1 {{ step >= 1 ? 'cursor-pointer' : '' }}" data-url="{{ absolute_url(path('app_order', {'step': step})) }}">
+						<div class="step-progress"></div>
+						<div class="icon-wrapper">
+							<svg class="icon icon-checkmark" viewbox="0 0 32 32">
+								<path class="path1" d="M27 4l-15 15-7-7-5 5 12 12 20-20z"></path>
+							</svg>
+							<div class="step-text">Adresse de livraison</div>
+						</div>
+					</div>
+					<div class="step step2 {{ step >= 2 ? 'cursor-pointer' : '' }}" data-url="{{ absolute_url(path('app_order', {'step': step})) }}">
+						<div class="step-progress"></div>
+						<div class="icon-wrapper">
+							<svg class="icon icon-checkmark" viewbox="0 0 32 32">
+								<path class="path1" d="M27 4l-15 15-7-7-5 5 12 12 20-20z"></path>
+							</svg>
+							<div class="step-text">Mode de livraison</div>
+						</div>
+					</div>
+					<div class="step step3 {{ step >= 3 ? 'cursor-pointer' : '' }}" data-url="{{ absolute_url(path('app_order', {'step': step})) }}">
+						<div class="step-progress"></div>
+						<div class="icon-wrapper">
+							<svg class="icon icon-checkmark" viewbox="0 0 32 32">
+								<path class="path1" d="M27 4l-15 15-7-7-5 5 12 12 20-20z"></path>
+							</svg>
+							<div class="step-text">Moyen de paiement</div>
+						</div>
+					</div>
+					<div class="step step4 {{ step >= 4 ? 'cursor-pointer' : '' }}" data-url="{{ absolute_url(path('app_order', {'step': step})) }}">
+						<div class="icon-wrapper">
+							<svg class="icon icon-checkmark" viewbox="0 0 32 32">
+								<path class="path1" d="M27 4l-15 15-7-7-5 5 12 12 20-20z"></path>
+							</svg>
+							<div class="step-text">Finalisation de l'achat</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<?php if((int)$step === 1): ?>
+				{% if step == 1 %}
+					{% include('order/order-address.html.twig') %}
+				{% endif %}
+				{% if step == 2 %}
+					{% include('order/options-livraison.html.twig') %}
+				{% endif %}
+				{% if step == 3 %}
+					{% include('order/payment-method.html.twig') %}
+				{% endif %}
+				{% if step == 4 %}
+					{% include('order/order-summary.html.twig') %}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<div id="checkout-step-finder" data-checkoutstep="{{ step }}"></div>
 {% endblock %}

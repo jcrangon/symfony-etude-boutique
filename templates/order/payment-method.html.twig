@@ -1,0 +1,99 @@
+<div class="container mt-4">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="container">
+				<div class="row">
+					<div class="col bg-light">
+						<h4>
+							Mode de livraison
+						</h4>
+						<p>
+							<small>Veuillez sélectionner un mode de livraison...</small>
+						</p>
+					</div>
+
+				</div>
+
+				<div class="vr"></div>
+
+				<div class="row ">
+					<div class="col bg-light">
+						<form id="paymentMethodForm" method="post" action="?step=3">
+							{% for method in paymentMethods %}
+								<div class="col p-2 m-2">
+									<input type="radio" class="form-check-input payment-method-radio me-2" name="paymentmethod" id="paymentMethodOption{{ method.id }}" {{ paymentMethodSelected == method.id ? 'checked' : '' }} value="{{ method.id }}">
+									<img class="me-2" src="{{ asset('assets/img/'~ method.img) }}" width="{{ method.width }}" alt="payment method">
+									<label class="form-check-label" for="paymentMethodOption{{ method.id }}">
+										{{ method.name }}
+									</label>
+								</div>
+							{% endfor %}
+							<input type="hidden" name="changePaymentMethodForm">
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-3 offset-3">
+			<div class="container bg-light pb-4">
+				<div class="row">
+					<h4>Panier:</h4>
+				</div>
+				<div class="row mb-3">
+					<div class="col-md-7 d-flex justify-content-end">
+						Total Articles HT:
+					</div>
+					<div class="col-md-5 d-flex justify-content-end">
+						{{ cartTotals.totalHT|format_currency('EUR') }}
+					</div>
+				</div>
+
+				<div class="row pb-2 mb-1 border-0 border-bottom">
+					<div class="col-md-7 d-flex justify-content-end">
+						Livraison:
+					</div>
+					<div class="col-md-5 d-flex justify-content-end">
+						{{ totalLivraisonHT|format_currency('EUR') }}
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					<div class="col-md-7 d-flex justify-content-end">
+						Total HT:
+					</div>
+					<div class="col-md-5 d-flex justify-content-end">
+						{{ (cartTotals.totalHT + totalLivraisonHT)|format_currency('EUR') }}
+					</div>
+				</div>
+
+				<div class="row mb-3 border-0 border-bottom">
+					<div class="col-md-7 d-flex justify-content-end">
+						TVA(20%):
+					</div>
+					<div class="col-md-5 d-flex justify-content-end pb-2">
+						{{ tva20|format_currency('EUR') }}
+					</div>
+				</div>
+
+				<div class="row  mb-3">
+					<div class="col-md-7 d-flex justify-content-end">
+						Total TTC:
+					</div>
+					<div class="col-md-5 d-flex justify-content-end">
+						<strong>{{ totalTTC|format_currency('EUR') }}</strong>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col border-top border-secondary mt-5 d-flex justify-content-between pt-3">
+		<a class="btn btn-outline-dark cart-btn d-inline-block" href="{{ absolute_url(path('app_order', {step: 2})) }}" role="button">Etape précédente</a>
+		<a class="btn btn-outline-dark cart-btn d-inline-block" href="{{ absolute_url(path('app_order', {step: 4})) }}" role="button">Etape suivante</a>
+	</div>
+</div>
+
+<div class="checkout-step" data-step="{{ step }}"></div>

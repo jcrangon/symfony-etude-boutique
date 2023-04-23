@@ -10,6 +10,8 @@ import './js/parallax.js';
 import './styles/app.scss';
 import './js/app.js';
 import './js/cart.js';
+import './js/checkout-progress-bar.js';
+import './js/checkout.js';
 
 // start the Stimulus application
 import './bootstrap';

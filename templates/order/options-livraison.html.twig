@@ -1,0 +1,105 @@
+<div class="container mt-4">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="container">
+				<div class="row">
+					<div class="col bg-light">
+						<h4>
+							Mode de livraison
+						</h4>
+						<p>
+							<small>Veuillez sélectionner un mode de livraison...</small>
+						</p>
+					</div>
+				</div>
+
+				<div class="vr"></div>
+
+				<div class="row ">
+					<div class="col bg-light">
+						{{ form_start(stepForm) }}
+						{% set i = 0 %}
+						{% for child in stepForm.shipping %}
+
+							<div class="col p-2 m-2 shipping-toggle cursor-pointer border border-secondary {{ transporteurSelected.id == child.vars.value and child.vars.value < transporteurs|length ? 'shadow mb-5 mt-5 border-success' : transporteurSelected.id == child.vars.value and child.vars.value == transporteurs|length ? 'shadow mt-5 border-success' : '' }}">
+
+								<div class="d-flex flex-row justify-content-lg-start">
+
+									{{ transporteurSelected.id == child.vars.value ? form_widget(child, {'attr': {'checked': 'checked', 'class':'shipping-method-radio'}}) : form_widget(child, {'attr': {'class':'shipping-method-radio'}}) }}
+
+									<spans class="ms-5" style="font-size:19px;">{{ transporteurs[child.vars.value - 1].prix|format_currency('EUR') }}<small style="font-size:15px; color: #aaa;">HT</small>
+									</span>
+
+								</div>
+								<div class="mt-4">
+									{{ transporteurs[child.vars.value - 1].description }}
+								</div>
+							</div>
+						{% endfor %}
+						{{ form_end(stepForm) }}
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="col-md-3 offset-3">
+			<div class="container bg-light pb-4">
+				<div class="row">
+					<h4>Panier:</h4>
+				</div>
+				<div class="row mb-3">
+					<div class="col-md-7 d-flex justify-content-end">
+						Total Articles HT:
+					</div>
+					<div class="col-md-5 d-flex justify-content-end">
+						{{ cartTotals.totalHT|format_currency('EUR') }}
+					</div>
+				</div>
+
+				<div class="row pb-2 mb-1 border-0 border-bottom">
+					<div class="col-md-7 d-flex justify-content-end">
+						Livraison:
+					</div>
+					<div class="col-md-5 d-flex justify-content-end">
+						{{ totalLivraisonHT|format_currency('EUR') }}
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					<div class="col-md-7 d-flex justify-content-end">
+						Total HT:
+					</div>
+					<div class="col-md-5 d-flex justify-content-end">
+						{{ (cartTotals.totalHT + totalLivraisonHT)|format_currency('EUR') }}
+					</div>
+				</div>
+
+				<div class="row mb-3 border-0 border-bottom">
+					<div class="col-md-7 d-flex justify-content-end">
+						TVA(20%):
+					</div>
+					<div class="col-md-5 d-flex justify-content-end pb-2">
+						{{ tva20|format_currency('EUR') }}
+					</div>
+				</div>
+
+				<div class="row  mb-3">
+					<div class="col-md-7 d-flex justify-content-end">
+						Total TTC:
+					</div>
+					<div class="col-md-5 d-flex justify-content-end">
+						<strong>{{ totalTTC|format_currency('EUR') }}</strong>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col border-top border-secondary mt-5 d-flex justify-content-end pt-3">
+		<a class="btn btn-outline-dark cart-btn d-inline-block" href="{{ absolute_url(path('app_order', {step: 3})) }}" role="button">Etape suivante</a>
+	</div>
+</div>
+<div class="checkout-step" data-step="{{ step }}"></div>

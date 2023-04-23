@@ -270,3 +270,78 @@ App\Entity\Carousel:
           max: 100
           minMessage: "field: emplacement must be at least {{ limit }} characters long"
           maxMessage: "field: emplacement  cannot be longer than {{ limit }} characters"
+
+App\Entity\Transporteur:
+  properties:
+    nom:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 1
+          max: 100
+          minMessage: "field: nom must be at least {{ limit }} characters long"
+          maxMessage: "field: nom  cannot be longer than {{ limit }} characters"
+    prix:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: float
+          message: The value {{ value }} is not a valid {{ type }}.
+
+    description:
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          max: 255
+          maxMessage: "field: description  cannot be longer than {{ limit }} characters"
+
+App\Entity\PaymentMethod:
+  properties:
+    name:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 1
+          max: 100
+          minMessage: "field: name must be at least {{ limit }} characters long"
+          maxMessage: "field: name  cannot be longer than {{ limit }} characters"
+    img:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 1
+          max: 255
+          minMessage: "field: img must be at least {{ limit }} characters long"
+          maxMessage: "field: img  cannot be longer than {{ limit }} characters"
+    width:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 1
+          max: 100
+          minMessage: "field: width must be at least {{ limit }} characters long"
+          maxMessage: "field: width  cannot be longer than {{ limit }} characters"
+    type:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 1
+          max: 3
+          minMessage: "field: type must be at least {{ limit }} characters long"
+          maxMessage: "field: type  cannot be longer than {{ limit }} characters"

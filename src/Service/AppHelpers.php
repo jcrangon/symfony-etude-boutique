@@ -5,11 +5,14 @@ namespace App\Service;
 
 use App\Entity\Carousel;
 use App\Entity\Categorie;
+use App\Entity\PaymentMethod;
 use App\Entity\Produit;
+use App\Entity\Transporteur;
 use stdClass;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Security\Core\Security;
 use Doctrine\Persistence\ManagerRegistry;
+use Stripe\FundingInstructions;
 
 class AppHelpers
 {
@@ -78,6 +81,18 @@ class AppHelpers
     if (!count($products)) {
       $this->installProducts();
     }
+
+    // recupération de tous les transporteurs
+    $transporteurs = $this->db->getRepository(Transporteur::class)->findAll();
+    if (!count($transporteurs)) {
+      $this->installTransporteurs();
+    }
+
+    // récupération des méthodes de payment
+    $paymentMethods = $this->db->getRepository(PaymentMethod::class)->findAll();
+    if (!count($paymentMethods)) {
+      $this->installPaymentMethods();
+    }
   }
 
   private function installCarousel($emplacement): void
@@ -116,7 +131,7 @@ class AppHelpers
   }
 
   // installe les catégories dans la BDD
-  private function intallCategories()
+  private function intallCategories(): void
   {
     $catList = $this->getCategoryList();
 
@@ -146,7 +161,8 @@ class AppHelpers
     ];
   }
 
-  private function installProducts()
+
+  private function installProducts(): void
   {
     $productList = $this->getProductList();
     foreach ($productList as $product) {
@@ -168,6 +184,7 @@ class AppHelpers
 
     $this->db->flush();
   }
+
 
   private function getProductList(): array
   {
@@ -287,6 +304,94 @@ class AppHelpers
         "photo" => "1648068059_tshirt_noir_l.webp",
         "prix" => 16,
         "stock" => 15,
+      ],
+    ];
+  }
+
+
+  private function installTransporteurs(): void
+  {
+    $transporteurList = $this->getTransporteurList();
+    foreach ($transporteurList as $transporteur) {
+      $t = new Transporteur();
+      $t->setNom($transporteur['name']);
+      $t->setPrix($transporteur['prixHT']);
+      $t->setDescription($transporteur['description']);
+
+      $this->db->persist($t);
+    }
+
+    $this->db->flush();
+  }
+
+  // retoune la liste des transporteurs
+  private function getTransporteurList(): array
+  {
+    return [
+      [
+        "name" => "Retrait en magasin",
+        "prixHT" => 0,
+        "description" => "Retirez directement vos article depuis l'un de nos points de vente.",
+      ],
+
+      [
+        "name" => "Colis Prioritaire",
+        "prixHT" => 12,
+        "description" => "Livraison rapide, généralement sous trois jours ouvrés.",
+      ],
+
+      [
+        "name" => "Livraison 24h express",
+        "prixHT" => 25,
+        "description" => "Livraison express. Vous êtes livrés le lendemain, généralement dans la soirée.",
+      ],
+    ];
+  }
+
+
+  private function installPaymentMethods(): void
+  {
+    $paymentMethods = $this->getPaymentMethodList();
+    foreach ($paymentMethods as $method) {
+      $pm = new PaymentMethod();
+      $pm->setName($method['name']);
+      $pm->setImg($method['img']);
+      $pm->setWidth($method['width']);
+      $pm->setType($method['type']);
+      $this->db->persist($pm);
+    }
+
+    $this->db->flush();
+  }
+
+  private function getPaymentMethodList(): array
+  {
+    return [
+      [
+        "name" => "Carte bleue",
+        "img" => "cb.jpg",
+        "width" => "30px",
+        "type" => "CC",
+      ],
+      [
+        "name" => "Visa/Mastercard",
+        "img" => "visa-mastercard-icon-7.jpg",
+        "width" => "50px",
+        "type" => "CC",
+      ],
+
+      [
+        "name" => "American Express",
+        "img" => "amex.png",
+        "width" => "30px",
+        "type" => "CC",
+      ],
+
+      [
+        "name" => "Paypal",
+        "img" => "paypal.webp",
+        "width" => "30px",
+        "type" => "PS",
       ],
     ];
   }
