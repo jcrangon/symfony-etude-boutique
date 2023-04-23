@@ -51,13 +51,18 @@ class PanierManager
         $panierDetail->setPanier($panier);
         $panierDetail->setProduit($product);
         $panierDetail->setQuantity(1);
+        $panier->addArticle($panierDetail);
+        $this->session->set('cartCount', (int) $panier->getCountArticle());
       } else {
         // on boucle pour trouver l'article dans le detail
         // du panier
+        $found = false;
         foreach ($panierDetails as $article) {
           if ($article->getProduit()->getId() === (int)$product->getId()) {
+            $found = true;
             // si trouvé on incrémente la quantité
             $article->setQuantity($article->getQuantity() + 1);
+            $panier->addArticle($article);
             $this->db->persist($panier);
             $this->db->persist($article);
             $this->db->flush();
@@ -67,11 +72,14 @@ class PanierManager
         }
         // sinon on cree une nouvelle ligne d'enregistrement
         // dans le detail du panier
-        $panierDetail = new PanierDetail();
-        $panierDetail->setPanier($panier);
-        $panierDetail->setProduit($product);
-        $panierDetail->setQuantity(1);
-        $this->session->set('cartCount', 1);
+        if (!$found) {
+          $panierDetail = new PanierDetail();
+          $panierDetail->setPanier($panier);
+          $panierDetail->setProduit($product);
+          $panierDetail->setQuantity(1);
+          $panier->addArticle($panierDetail);
+          $this->session->set('cartCount', (int) $panier->getCountArticle());
+        }
       }
     } else {
       // si l'utilisateur n'a pas encore de panier
@@ -86,7 +94,8 @@ class PanierManager
       $panierDetail->setPanier($panier);
       $panierDetail->setProduit($product);
       $panierDetail->setQuantity(1);
-      $this->session->set('cartCount', 1);
+      $panier->addArticle($panierDetail);
+      $this->session->set('cartCount', (int) $panier->getCountArticle());
     }
 
     // on enregistre dans la bdd
@@ -94,8 +103,33 @@ class PanierManager
     $this->db->persist($panierDetail);
     $this->db->flush();
     $this->session->set('cartCount', (int) $panier->getCountArticle());
+
     return true;
   }
+
+  public function removeFromCart(Membre $user, Produit $product)
+  {
+    $panier = $user->getPanier();
+    $articles = $panier->getArticle();
+    $idToRemove = $product->getId();
+    foreach ($articles as $article) {
+      if ($article->getProduit()->getId() === $idToRemove) {
+        $panier->removeArticle($article);
+      }
+    }
+
+    $this->db->persist($panier);
+    $this->db->flush();
+    $this->session->set('cartCount', (int) $panier->getCountArticle());
+
+
+    // on reinitialise le tunnel de commande
+    // si le nombre d'article tombe à zéro.
+    if ((int) $panier->getCountArticle() === 0) {
+      $this->session->remove('step');
+    }
+  }
+
 
   public function getCartCount(Membre $user): int
   {

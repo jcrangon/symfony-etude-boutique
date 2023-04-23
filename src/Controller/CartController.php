@@ -62,11 +62,23 @@ class CartController extends AbstractController
   }
 
   // affichage de la page du panier
-  public function cartDetails(PanierManager $cartManager)
+  public function cartDetails(PanierManager $cartManager, Request $request)
   {
+    // on verifie si le bouton de suppression d'article a été
+    // cliqué
+    if (null !== $request->get('id-to-delete')) {
+      //dd($request);
+      $idtoDelete = $request->get('id-to-delete');
+      $product = $this->db->getRepository(Produit::class)->find($idtoDelete);
+
+      if ($product) {
+        $this->cartManager->removeFromCart($this->userInfo->user, $product);
+        $this->cartCount = $this->session->get('cartCount');
+      }
+    }
     // on récupère les articles du panier
     $articles = $this->userInfo->user->getPanier()->getArticle();
-
+    $this->cartCount = $this->session->get('cartCount');
     // on defini le taux de tva
     $tauxTva = 20;
 
