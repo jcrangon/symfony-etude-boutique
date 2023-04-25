@@ -79,6 +79,7 @@ class StripeController extends AbstractController
             'cartCount' => $this->cartCount,
             'userInfo' => $this->userInfo,
             'orderTotal' => $this->session->get('orderTotal'),
+            'paymentMethod' => 'Stripe Charge',
         ]);
     }
 

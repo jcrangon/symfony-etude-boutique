@@ -15,7 +15,6 @@ use Exception;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Validator\Constraints\Length;
@@ -34,7 +33,7 @@ class OrderController extends AbstractController
     public function __construct(Security $security, ManagerRegistry $doctrine,  AppHelpers $app, PanierManager $cartManager, RequestStack $requestStack, OrderManager $orderManager)
     {
         $this->app = $app;
-        $this->bodyId = $app->getBodyId('HOME_PAGE');
+        $this->bodyId = $app->getBodyId('ORDER_PAGE');
         $this->db = $doctrine->getManager();
         $this->userInfo = $app->getUser();
         $this->orderManager = $orderManager;
@@ -52,6 +51,9 @@ class OrderController extends AbstractController
 
     public function index(int $step, Request $request): Response
     {
+        // $this->session->remove('checkoutData');
+        // $this->session->remove('step');
+        // exit();
         // on sécurise
         // si le panier est vide, on redirige
         if ($this->cartCount === 0) {
@@ -59,12 +61,14 @@ class OrderController extends AbstractController
         }
         // si l'etape n'est pas spécifiée en url
         // on redirige
-        if (null === $step) {
-            $step = (int) $this->session->get('step');
+        if (null === $step || $step < 1 || $step > 4) {
+            return $this->redirectToRoute('app_cart');
         }
         // si l'etape autorisée n'est pas présente en session
         // on redirige
-        if (null === $this->session->get('step')) {
+        if (null === $this->session->get('step') && $step === 1) {
+            $this->session->set('step', 1);
+        } else if (null === $this->session->get('step') && $step !== 1) {
             return $this->redirectToRoute('app_cart');
         }
         // si l'etape spécifiée en url est supérieur
@@ -350,8 +354,14 @@ class OrderController extends AbstractController
     {
         $chosenPaymentId = $this->session->get('checkoutData')['payment']['method'];
         $chosenPayment = $this->db->getRepository(PaymentMethod::class)->find($chosenPaymentId);
+
+        // on vérifie le nom du moyen choisi.
+        // Si ce dernier ne s'appelle pas Paypal
+        // alors on redirige vers stripe
         if ($chosenPayment->getName() !== 'Paypal') {
             return $this->redirectToRoute('app_stripe');
+        } else {
+            return $this->redirectToRoute('app_paypal');
         }
     }
 }

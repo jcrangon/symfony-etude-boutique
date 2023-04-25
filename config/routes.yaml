@@ -157,3 +157,8 @@ app_stripe_success:
 app_stripe_fail:
   path: /payment/failure
   controller: App\Controller\StripeController::paymentFailure
+
+# Paypal
+app_paypal:
+  path: /paypal
+  controller: App\Controller\PaypalController::index

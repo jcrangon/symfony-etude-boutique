@@ -36,7 +36,10 @@ class OrderManager
 
   public function getTotalLivraison()
   {
-    if (null === $this->session->get('checkoutData')['shippingMethod']['prix']) {
+    // dd($this->session->get('checkoutData'));
+    // exit();
+
+    if (!isset($this->session->get('checkoutData')['shippingMethod']['prix'])) {
       return 0;
     } else {
       $shipping = $this->session->get('checkoutData')['shippingMethod']['prix'];
