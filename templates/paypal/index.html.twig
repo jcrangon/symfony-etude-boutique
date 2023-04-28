@@ -3,13 +3,152 @@
 {% block title %}Paiement Paypal
 {% endblock %}
 
-{% block body %}
+{% block contentFullWidth %}
 	<div>
-		<div id="paypal-button-container"></div>
-	</div>
-	<script src="https://www.paypal.com/sdk/js?{{ parameters }}"></script>
-	<script>
-		paypal.Buttons({ // All your options here !
+		<div class="container mt-4">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="container">
+						<div class="row">
+							<div class="col bg-light">
+								<h4>
+									Finalisation de ma commande
+								</h4>
+								<p>
+									<small>Veuillez vérifier les informations fournies.</small>
+								</p>
+							</div>
+						</div>
+
+						<div class="vr"></div>
+
+						<div class="row ">
+							<div class="col bg-light">
+								<h6>
+									<em>Adresse de livraison</em>
+								</h6>
+								<p>{{ checkoutData.adresseLivraison.adresse }}<br>{{ checkoutData.adresseLivraison.codePostal }}
+									{{ checkoutData.adresseLivraison.ville }}</p>
+							</div>
+						</div>
+
+						<div class="vr"></div>
+
+						<div class="row ">
+							<div class="col bg-light">
+								<h6>
+									<em>Mode de livraison</em>
+								</h6>
+								<p>{{ checkoutData.shippingMethod.nom }}</p>
+							</div>
+						</div>
+
+						<div class="vr"></div>
+
+						<div class="row ">
+							<div class="col bg-light">
+								<h6>
+									<em>Moyen de Paiement</em>
+								</h6>
+								<p>
+									<img class="me-2" src="{{ asset('assets/img/'~ method.img) }}" width="{{ method.width }}" alt="payment method">
+									<label class="form-check-label" for="paymentMethodOption{{ method.id }}">
+										{{ method.name }}
+									</label>
+								</p>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="col-md-3 offset-3">
+					<div class="container bg-light pb-4">
+						<div class="row">
+							<h4>Panier:</h4>
+						</div>
+						<div class="row mb-3">
+							<div class="col-md-7 d-flex justify-content-end">
+								<em>Total Articles HT:</em>
+							</div>
+							<div class="col-md-5 d-flex justify-content-end">
+								{{ checkoutData.orderTotals.cartTotals.totalHT|format_currency('EUR') }}
+							</div>
+						</div>
+
+						<div class="row pb-2 mb-1 border-0 border-bottom">
+							<div class="col-md-7 d-flex justify-content-end">
+								<em>Livraison:</em>
+								<span style="color:red;">*</span>
+							</div>
+							<div class="col-md-5 d-flex justify-content-end">
+								{{ checkoutData.orderTotals.totalLivraisonHT|format_currency('EUR') }}
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-7 d-flex justify-content-end">
+								<em>Total HT:</em>
+							</div>
+							<div class="col-md-5 d-flex justify-content-end">
+								{{ (checkoutData.orderTotals.cartTotals.totalHT + checkoutData.orderTotals.totalLivraisonHT)|format_currency('EUR') }}
+							</div>
+						</div>
+
+						<div class="row mb-3 border-0 border-bottom">
+							<div class="col-md-7 d-flex justify-content-end">
+								<em>TVA(20%):</em>
+							</div>
+							<div class="col-md-5 d-flex justify-content-end pb-2">
+								{{ checkoutData.orderTotals.tva20|format_currency('EUR') }}
+							</div>
+						</div>
+
+						<div class="row  mb-3">
+							<div class="col-md-7 d-flex justify-content-end">
+								Total TTC:
+							</div>
+							<div class="col-md-5 d-flex justify-content-end">
+								<strong>
+									{{ checkoutData.orderTotals.totalTTC|format_currency('EUR') }}
+								</strong>
+							</div>
+						</div>
+						<div class="row  mb-3">
+							<div class="col d-flex justify-content-start">
+								<span style="color:red;">*</span>
+								<span class="text-secondary">
+									<small>{{ checkoutData.shippingMethod.nom }}</small>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="checkout-step" data-step="4"></div>
+		<div class="container">
+			<div class="row justify-content-center">
+				<div
+					class="col-6 mx-auto mt-5">
+
+					{# payPal Payment Element #}
+					<div id="paypal-button-container"></div>
+
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col border-top border-secondary mt-5 d-flex justify-content-between pt-3">
+					<a class="btn btn-outline-dark cart-btn d-inline-block" href="{{ absolute_url(path('app_order', {step: 3})) }}" role="button">Etape précédente</a>
+				</div>
+			</div>
+		</div>
+		<script src="https://www.paypal.com/sdk/js?{{ parameters }}"></script>
+		<script>
+			paypal.Buttons({ // All your options here !
 createOrder: (data, actions) => {
 return actions.order.create({
 intent: 'capture', // capture or authorize
@@ -29,17 +168,16 @@ shipping_preference: 'NO_SHIPPING' // if you handle shipping
 });
 },
 // Finalizes the transaction after payer approval
-onApprove: (data) => {
-console.log('Unicorn bought, yay !')
+onApprove: (data) => { // error = err.purchase_units.captures.status;
+window.location.assign("{{ absolute_url(path('app_paypal_success')) }}");
 },
 // The user closed the window
-onCancel: () => {
-console.log('The user canceled the payment');
-},
+onCancel: () => {},
 onError: (err) => {
-console.log('Something went wrong', err);
+error = err.purchase_units.captures.status;
+window.location.assign("{{ absolute_url(path('app_paypal_fail', {err: ''})) }}/" + error);
 }
 }).render('#paypal-button-container');
-	</script>
+		</script>
 
-{% endblock %}
+	{% endblock %}

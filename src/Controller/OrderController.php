@@ -56,6 +56,7 @@ class OrderController extends AbstractController
         // exit();
         // on sécurise
         // si le panier est vide, on redirige
+
         if ($this->cartCount === 0) {
             return $this->redirectToRoute('app_category');
         }
@@ -258,9 +259,7 @@ class OrderController extends AbstractController
         }
 
         // on enregistre le montant de la tva
-        if (!isset($checkoutData['orderTotals']['tva20']) || empty($checkoutData['orderTotals']['tva20'])) {
-            $checkoutData['orderTotals']['tva20'] = round((($checkoutData['orderTotals']['cartTotals']->totalHT + $checkoutData['orderTotals']['totalLivraisonHT'])  * 20 / 100), 2, PHP_ROUND_HALF_UP);
-        }
+        $checkoutData['orderTotals']['tva20'] = round((($checkoutData['orderTotals']['cartTotals']->totalHT + $checkoutData['orderTotals']['totalLivraisonHT'])  * 20 / 100), 2, PHP_ROUND_HALF_UP);
 
         // on enregistre le montant TTC
         $checkoutData['orderTotals']['totalTTC'] =

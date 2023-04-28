@@ -53,6 +53,7 @@ class PayPal
       'client-id' => $this->clientId,
       'components' => 'buttons',
       'currency' => 'EUR',
+      'locale' => 'fr_FR',
       'debug' => $this->debug,
       'enable-funding' => 'paylater', // Enables the "Pay Later" button (US, UK), which is "4X PayPal" in France, see https://developer.paypal.com/sdk/js/configuration/#link-enablefunding
       'integration-date' => '2022-10-31', // Do not update this date, it ensures backward-compat

@@ -22,7 +22,7 @@ class Order
     #[ORM\Column(type: 'integer', nullable: false)]
     private $id = null;
 
-    #[ORM\Column(type: 'integer', length: 100, nullable: false, options: ['collation' => 'utf8mb4_general_ci'])]
+    #[ORM\Column(type: 'string', length: 100, nullable: false, options: ['collation' => 'utf8mb4_general_ci'])]
     private $status = self::PENDING;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -49,7 +49,7 @@ class Order
     #[ORM\Column(type: 'float', nullable: false)]
     private $totalAmountTTC;
 
-    #[ORM\Column(type: 'integer', length: 150, nullable: false, options: ['collation' => 'utf8mb4_general_ci'])]
+    #[ORM\Column(type: 'string', length: 150, nullable: false, options: ['collation' => 'utf8mb4_general_ci'])]
     private $shippingMethod;
 
     #[ORM\ManyToOne(inversedBy: 'orders')]

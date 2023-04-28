@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Stripe;
 use App\Service\AppHelpers;
+use App\Service\OrderManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
 use App\Service\PanierManager;
@@ -72,13 +73,17 @@ class StripeController extends AbstractController
         return $this->redirectToRoute('app_stripe_success', [], Response::HTTP_SEE_OTHER);
     }
 
-    public function orderConfirmation(): Response
+    public function orderConfirmation(OrderManager $om): Response
     {
+        $totalOrder = $this->session->get('orderTotal');
+        $om->cleanUpAfterCheckout();
+        $this->session->set('cartCount', 0);
+
         return $this->render('stripe/order_confirmation.html.twig', [
             'bodyId' => $this->bodyId,
-            'cartCount' => $this->cartCount,
+            'cartCount' => 0,
             'userInfo' => $this->userInfo,
-            'orderTotal' => $this->session->get('orderTotal'),
+            'orderTotal' => $totalOrder,
             'paymentMethod' => 'Stripe Charge',
         ]);
     }

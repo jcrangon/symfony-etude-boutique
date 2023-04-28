@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\PaymentMethod;
 use App\Service\PayPal;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Service\AppHelpers;
+use App\Service\OrderManager;
 use App\Service\PanierManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Security;
@@ -42,8 +44,10 @@ class PaypalController extends AbstractController
     public function index(PayPal $payPal): Response
     {
         if (!isset($this->session->get('checkoutData')['orderTotals']['totalTTC'])) {
-            $this->redirectToRoute('app_category');
+            return $this->redirectToRoute('app_category');
         }
+
+        $method = $this->db->getRepository(PaymentMethod::class)->find((int)$this->session->get('checkoutData')['payment']['method']);
 
         return $this->render('paypal/index.html.twig', [
             'bodyId' => $this->bodyId,
@@ -53,18 +57,34 @@ class PaypalController extends AbstractController
             'paymentMethod' => 'payPal Charge',
             'amount' => (float)$this->session->get('checkoutData')['orderTotals']['totalTTC'],
             'shipping_preference' => $this->session->get('checkoutData')['shippingMethod']['nom'],
+            'checkoutData' => $this->session->get('checkoutData'),
+            'method' => $method,
         ]);
     }
 
-    public function confirmation(Request $request, PayPal $payPal): Response
+    public function orderConfirmation(OrderManager $om): Response
     {
-        // Some logic to verify if the captured payment is valid
-        // ... 
+        $totalOrder = $this->session->get('orderTotal');
+        $om->cleanUpAfterCheckout();
+        $this->session->set('cartCount', 0);
 
         return $this->render('paypal/order_confirmation.html.twig', [
             'bodyId' => $this->bodyId,
+            'cartCount' => 0,
+            'userInfo' => $this->userInfo,
+            'orderTotal' => $totalOrder,
+            'paymentMethod' => 'Stripe Charge',
+        ]);
+    }
+
+    public function paymentFailure(Request $request, string $err, OrderManager $om): Response
+    {
+        return $this->render('paypal/payment_failure.html.twig', [
+            'bodyId' => $this->bodyId,
             'cartCount' => $this->cartCount,
             'userInfo' => $this->userInfo,
+            'orderTotal' => $this->session->get('orderTotal'),
+            'error' => $err,
         ]);
     }
 }
