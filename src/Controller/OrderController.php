@@ -236,10 +236,20 @@ class OrderController extends AbstractController
             $checkoutData['adresseLivraison']['ville'] = $this->userInfo->user->getVille();
         }
 
-        // on récupère les totaux du panier
-        if (!isset($checkoutData['orderTotals']['cartTotals']) || empty($checkoutData['orderTotals']['cartTotals'])) {
-            $checkoutData['orderTotals']['cartTotals'] = $this->orderManager->getCartTotals($this->userInfo->user->getPanier(), 20);
+        // on enregistre le transporteur par defaut dans la session
+        if (!isset($checkoutData['shippingMethod']['id']) || empty($checkoutData['shippingMethod']['id'])) {
+            $DefaultTransporteur = $this->db->getRepository(Transporteur::class)->find(1);
+            $checkoutData['shippingMethod']['id'] = $DefaultTransporteur->getId();
+            $checkoutData['shippingMethod']['nom'] = $DefaultTransporteur->getNom();
+            $checkoutData['shippingMethod']['prix'] = $DefaultTransporteur->getPrix();
+            $checkoutData['shippingMethod']['description'] = $DefaultTransporteur->getDescription();
         }
+
+        // on récupère les totaux du panier
+        // on récupère dynamiquement car un utilisateur
+        // pourrait utiliser la barre d'adresse  et ne pas
+        // repasser par la page panier.
+        $checkoutData['orderTotals']['cartTotals'] = $this->orderManager->getCartTotals($this->userInfo->user->getPanier(), 20);
 
 
         //on récupère les montants
@@ -253,18 +263,10 @@ class OrderController extends AbstractController
         }
 
         // on enregistre le montant TTC
-        if (!isset($checkoutData['orderTotals']['totalTTC']) || empty($checkoutData['orderTotals']['totalTTC'])) {
-            $checkoutData['orderTotals']['totalTTC'] = $checkoutData['orderTotals']['cartTotals']->totalHT + $checkoutData['orderTotals']['totalLivraisonHT'] + $checkoutData['orderTotals']['tva20'];
-        }
+        $checkoutData['orderTotals']['totalTTC'] =
+            $checkoutData['orderTotals']['cartTotals']->totalHT + $checkoutData['orderTotals']['totalLivraisonHT'] + $checkoutData['orderTotals']['tva20'];
 
-        // on enregistre le transporteur par defaut dans la session
-        if (!isset($checkoutData['shippingMethod']['id']) || empty($checkoutData['shippingMethod']['id'])) {
-            $DefaultTransporteur = $this->db->getRepository(Transporteur::class)->find(1);
-            $checkoutData['shippingMethod']['id'] = $DefaultTransporteur->getId();
-            $checkoutData['shippingMethod']['nom'] = $DefaultTransporteur->getNom();
-            $checkoutData['shippingMethod']['prix'] = $DefaultTransporteur->getPrix();
-            $checkoutData['shippingMethod']['description'] = $DefaultTransporteur->getDescription();
-        }
+
 
         // on enregistre l'option de payment
         if (!isset($checkoutData['payment']['method']) || empty($checkoutData['payment']['method'])) {

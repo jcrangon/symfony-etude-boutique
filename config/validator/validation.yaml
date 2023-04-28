@@ -345,3 +345,64 @@ App\Entity\PaymentMethod:
           max: 3
           minMessage: "field: type must be at least {{ limit }} characters long"
           maxMessage: "field: type  cannot be longer than {{ limit }} characters"
+
+App\Entity\Order:
+  properties:
+    paymentMethod:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 1
+          max: 100
+          minMessage: "field: paymentMethod must be at least {{ limit }} characters long"
+          maxMessage: "field: paymentMethod  cannot be longer than {{ limit }} characters"
+
+    shippingMethod:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: string
+          message: The value {{ value }} is not a valid {{ type }}.
+      - Length:
+          min: 1
+          max: 150
+          minMessage: "field: shippingMethod must be at least {{ limit }} characters long"
+          maxMessage: "field: shippingMethod  cannot be longer than {{ limit }} characters"
+
+    amountHT:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: float
+          message: The value {{ value }} is not a valid {{ type }}.
+
+    shippingHT:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: float
+          message: The value {{ value }} is not a valid {{ type }}.
+
+    totalAmountHT:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: float
+          message: The value {{ value }} is not a valid {{ type }}.
+
+    amountTVA:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: float
+          message: The value {{ value }} is not a valid {{ type }}.
+
+    totalAmountTTC:
+      - NotNull: ~
+      - NotBlank: ~
+      - Type:
+          type: float
+          message: The value {{ value }} is not a valid {{ type }}.

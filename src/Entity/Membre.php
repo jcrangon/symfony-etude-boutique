@@ -107,9 +107,13 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Coupon::class, inversedBy: 'membres')]
     private Collection $coupon;
 
+    #[ORM\OneToMany(mappedBy: 'membre', targetEntity: Order::class, orphanRemoval: true)]
+    private Collection $orders;
+
     public function __construct()
     {
         $this->coupon = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
 
@@ -449,5 +453,35 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     {
 
         return $this->panier;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setMembre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getMembre() === $this) {
+                $order->setMembre(null);
+            }
+        }
+
+        return $this;
     }
 }

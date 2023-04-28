@@ -3,23 +3,27 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\IsFalse;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
 class Order
 {
-    public const STATUS_FRAUD_SUSPECTED = 'fraud_suspected';
-    public const STATUS_PAID = 'paid';
+    public const STATUS_FRAUD_SUSPECTED = 'Faude suspectée';
+    public const STATUS_PAID = 'Paiement effectué';
+    public const PENDING = 'En attente de Paiement';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'integer', nullable: false)]
+    private $id = null;
 
-    #[ORM\Column(length: 100)]
-    private ?string $status = null;
+    #[ORM\Column(type: 'integer', length: 100, nullable: false, options: ['collation' => 'utf8mb4_general_ci'])]
+    private $status = self::PENDING;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
@@ -27,23 +31,38 @@ class Order
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[ORM\Column(length: 100)]
-    private ?string $paymentMethod = null;
+    #[ORM\Column(type: 'integer', length: 100, nullable: false, options: ['collation' => 'utf8mb4_general_ci'])]
+    private $paymentMethod;
 
-    #[ORM\Column]
-    private ?float $amountHT = null;
+    #[ORM\Column(type: 'float', nullable: false)]
+    private $amountHT;
 
-    #[ORM\Column]
-    private ?float $shippingHT = null;
+    #[ORM\Column(type: 'float', nullable: false)]
+    private $shippingHT;
 
-    #[ORM\Column]
-    private ?float $totalAmountHT = null;
+    #[ORM\Column(type: 'float', nullable: false)]
+    private $totalAmountHT;
 
-    #[ORM\Column]
-    private ?float $amountTVA = null;
+    #[ORM\Column(type: 'float', nullable: false)]
+    private $amountTVA;
 
-    #[ORM\Column]
-    private ?float $totalAmountTTC = null;
+    #[ORM\Column(type: 'float', nullable: false)]
+    private $totalAmountTTC;
+
+    #[ORM\Column(type: 'integer', length: 150, nullable: false, options: ['collation' => 'utf8mb4_general_ci'])]
+    private $shippingMethod;
+
+    #[ORM\ManyToOne(inversedBy: 'orders')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Membre $membre = null;
+
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: OrderDetail::class)]
+    private Collection $OrderLines;
+
+    public function __construct()
+    {
+        $this->OrderLines = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -154,6 +173,60 @@ class Order
     public function setTotalAmountTTC(float $totalAmountTTC): self
     {
         $this->totalAmountTTC = $totalAmountTTC;
+
+        return $this;
+    }
+
+    public function getShippingMethod(): ?string
+    {
+        return $this->shippingMethod;
+    }
+
+    public function setShippingMethod(string $shippingMethod): self
+    {
+        $this->shippingMethod = $shippingMethod;
+
+        return $this;
+    }
+
+    public function getMembre(): ?Membre
+    {
+        return $this->membre;
+    }
+
+    public function setMembre(?Membre $membre): self
+    {
+        $this->membre = $membre;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OrderDetail>
+     */
+    public function getOrderLines(): Collection
+    {
+        return $this->OrderLines;
+    }
+
+    public function addOrderLine(OrderDetail $orderLine): self
+    {
+        if (!$this->OrderLines->contains($orderLine)) {
+            $this->OrderLines->add($orderLine);
+            $orderLine->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderLine(OrderDetail $orderLine): self
+    {
+        if ($this->OrderLines->removeElement($orderLine)) {
+            // set the owning side to null (unless already changed)
+            if ($orderLine->getOwner() === $this) {
+                $orderLine->setOwner(null);
+            }
+        }
 
         return $this;
     }

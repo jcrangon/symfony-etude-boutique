@@ -161,6 +161,18 @@ class PanierManager
     // on en déduit le montant tva
     $totalTVA = $totalTTC - $totalHT;
 
+    // si on est dans le tunnel de commande à l'étape 4
+    if (3 === (int)$this->session->get('step')) {
+      $temp = [];
+      foreach ($articles as $article) {
+        $temp[$article->getId()] = $article->getProduit()->getPrix();
+      }
+      // dd($temp);
+      $this->session->set('lignesPanier', $temp);
+    } elseif (null !== $this->session->get('lignesPanier')) {
+      $this->session->remove('lignesPanier');
+    }
+
     // on definit un objet de données
     $out = new stdClass();
     $out->totalTTC = $totalTTC;
